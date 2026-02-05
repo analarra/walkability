@@ -11,15 +11,75 @@
     <style>
 
         /* --- MENU DE NAVEGAÇÃO SUPERIOR DIREITO --- */
-        #nav-menu {
+        /* --- CONTAINER E BOTÃO PAGES --- */
+        #nav-wrapper {
             position: fixed;
-            top: 65px; /* Ajustado para ficar logo abaixo do logo-container */
+            top: 65px; /* Abaixo do logo superior direito */
             right: 15px;
-            z-index: 1001;
+            z-index: 1002;
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             align-items: flex-end;
-            gap: 8px;
+        }
+
+        #menu-toggle {
+            background: white;
+            color: #333;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: background 0.3s;
+        }
+
+        #menu-toggle:hover {
+            background: #f8f8f8;
+        }
+
+        /* --- MENU EXPANSÍVEL --- */
+        #nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 8px;
+            transition: all 0.3s ease;
+            transform-origin: top right;
+        }
+
+        /* Estado recolhido */
+        #nav-menu.collapsed {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.95);
+            pointer-events: none;
+        }
+
+        /* Estado expandido */
+        #nav-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+
+        #nav-menu a {
+            text-decoration: none;
+            color: #444;
+            font-size: 13px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        #nav-menu a:hover {
+            background: white;
+            padding-right: 20px;
+            color: #000;
         }
 
         #nav-menu a {
@@ -465,14 +525,17 @@
 </head>
 <body>
 
-    <nav id="nav-menu">
-        <a href="javascript:void(0)" onclick="goToPage(0)">Home</a>
-        <a href="javascript:void(0)" onclick="goToPage(1)">Background</a>
-        <a href="javascript:void(0)" onclick="goToPage(2)">Objectives</a>
-        <a href="javascript:void(0)" onclick="goToPage(3)">Methodology</a>
-        <a href="javascript:void(0)" onclick="goToPage(4)">Factors</a>
-        <a href="javascript:void(0)" onclick="goToPage(5)" class="nav-map-btn">Map</a>
-    </nav>
+    <div id="nav-wrapper">
+        <button id="menu-toggle">Pages ▾</button>
+        <nav id="nav-menu" class="collapsed">
+            <a href="javascript:void(0)" onclick="goToPage(0)">Home</a>
+            <a href="javascript:void(0)" onclick="goToPage(1)">Background</a>
+            <a href="javascript:void(0)" onclick="goToPage(2)">Objectives</a>
+            <a href="javascript:void(0)" onclick="goToPage(3)">Methodology</a>
+            <a href="javascript:void(0)" onclick="goToPage(4)">Factors</a>
+            <a href="javascript:void(0)" onclick="goToPage(5)" class="nav-map-btn">Map</a>
+        </nav>
+    </div>
 
     <div id="scroll-indicator">
         <span>scroll down</span>
@@ -690,6 +753,37 @@
 
         // --- LÓGICA PRINCIPAL DA PÁGINA ---
         document.addEventListener('DOMContentLoaded', function() {
+
+            // Lógica para abrir/fechar o menu Pages
+            const menuToggle = document.getElementById('menu-toggle');
+            const navMenu = document.getElementById('nav-menu');
+
+            menuToggle.addEventListener('click', (e) => {
+                navMenu.classList.toggle('active');
+                navMenu.classList.toggle('collapsed');
+                
+                // Troca a setinha do botão
+                menuToggle.textContent = navMenu.classList.contains('active') ? 'Pages ▴' : 'Pages ▾';
+                
+                // Impede que o clique feche o menu imediatamente
+                e.stopPropagation();
+            });
+
+            // Fecha o menu se clicar em qualquer outro lugar da tela
+            document.addEventListener('click', () => {
+                navMenu.classList.add('collapsed');
+                navMenu.classList.remove('active');
+                menuToggle.textContent = 'Pages ▾';
+            });
+
+            // Fecha o menu após clicar em um link
+            navMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.add('collapsed');
+                    navMenu.classList.remove('active');
+                    menuToggle.textContent = 'Pages ▾';
+                });
+            });
 
             // Dentro de document.addEventListener('DOMContentLoaded', function() { ... })
 
