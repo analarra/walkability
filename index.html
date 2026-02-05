@@ -9,6 +9,74 @@
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 
     <style>
+
+        /* --- MENU DE NAVEGAÇÃO SUPERIOR DIREITO --- */
+        #nav-menu {
+            position: fixed;
+            top: 65px; /* Ajustado para ficar logo abaixo do logo-container */
+            right: 15px;
+            z-index: 1001;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        #nav-menu a {
+            text-decoration: none;
+            color: #313131;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: rgba(187, 182, 182, 0.8);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        #nav-menu a:hover {
+            color: #000;
+            background: rgba(214, 203, 203, 1);
+            padding-right: 12px; /* Efeito sutil de expansão */
+        }
+
+        .nav-map-btn {
+            color: #4298fa !important; /* Destaque para o link do mapa */
+            font-weight: bold !important;
+        }
+
+        /* --- INDICADOR DE SCROLL DOWN --- */
+        #scroll-indicator {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #000000;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: opacity 0.5s ease;
+            pointer-events: none; /* Não interfere nos cliques do mapa */
+        }
+
+        #scroll-indicator .arrow {
+            width: 10px;
+            height: 10px;
+            border-right: 2px solid #000000;
+            border-bottom: 2px solid #000000;
+            transform: rotate(45deg);
+            margin-top: 8px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0) rotate(45deg);}
+            40% {transform: translateY(-8px) rotate(45deg);}
+            60% {transform: translateY(-4px) rotate(45deg);}
+        }
+
         /* --- ESTILO PARA O BOTÃO VOLTAR --- */
         #back-to-intro-btn {
             position: absolute;
@@ -304,18 +372,136 @@
             font-weight: bold;
             color: #333;
         }
+
+        #hero-page {
+            /* Imagem de fundo baseada em urbanismo/pedestres */
+            /* Mantemos o gradiente para garantir que o texto da caixa branca tenha contraste com o fundo */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                            url('images/background.png'); /* <-- Caminho para sua pasta local */
+            background-size: cover;
+            background-position: center;
+            
+            /* Força o conteúdo a ficar no centro (anulando o flex-start anterior) */
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+        }
+
+        .hero-box {
+            background: rgba(255, 255, 255, 0.95); /* Branco com leve transparência */
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 90%;
+        }
+
+        .hero-box h1 {
+            color: #222;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: none; /* Remove sombra para legibilidade no branco */
+        }
+
+        .hero-box p {
+            color: #555;
+            font-size: 1.4rem;
+            margin: 0 auto 40px auto;
+            max-width: 100%;
+        }
+
+        /* Container dos logos */
+        .hero-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap; /* Garante que em telas pequenas eles quebrem linha */
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 30px;
+        }
+
+        .hero-logos img {
+            height: 45px; /* Altura controlada para os logos pequenos */
+            width: auto;
+            filter: grayscale(100%); /* Deixa os logos em P&B para um look clean */
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .hero-logos img:hover {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+
+        /* Estilo para o logo principal na Hero Box */
+        .main-logo-wrapper {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .hero-logo-img {
+            max-width: 150px; /* Define um limite de largura para o logo */
+            width: 100%;      /* Faz ele ser responsivo */
+            height: auto;
+            max-height: 150px; /* Limita a altura para não empurrar o texto muito para baixo */
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Esconde o texto do H1 mas mantém para acessibilidade/SEO */
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
     </style>
 </head>
 <body>
+
+    <nav id="nav-menu">
+        <a href="javascript:void(0)" onclick="goToPage(0)">Home</a>
+        <a href="javascript:void(0)" onclick="goToPage(1)">Background</a>
+        <a href="javascript:void(0)" onclick="goToPage(2)">Objectives</a>
+        <a href="javascript:void(0)" onclick="goToPage(3)">Methodology</a>
+        <a href="javascript:void(0)" onclick="goToPage(4)">Factors</a>
+        <a href="javascript:void(0)" onclick="goToPage(5)" class="nav-map-btn">Map</a>
+    </nav>
+
+    <div id="scroll-indicator">
+        <span>scroll down</span>
+        <div class="arrow"></div>
+    </div>
+
     <div id="logo-container">
         <span>WalkUScan</span>
     </div>
 
     <div id="main-container">
-        <section class="page intro-page" data-index="0">
-            <h1>WalkUScan:</h1>
-            <p>A Comprehensive Index for Enhancing Pedestrian-Friendly Environments in Latin American Cities</p>
-        </section>
+        <section class="page intro-page" id="hero-page" data-index="0">
+    <div class="hero-box">
+        <div class="main-logo-wrapper">
+            <img src="images/WALKC.png" alt="WalkUScan Logo" class="hero-logo-img">
+            <h1 class="visually-hidden">WalkUScan</h1>
+        </div>
+
+        <p>A Comprehensive Index for Enhancing Pedestrian-Friendly Environments in Latin American Cities</p>
+        
+        <div class="hero-logos">
+            <img src="images/UFRGS.jpg" alt="Partner 1">
+            <img src="images/LOG_UN_INTERNACIONAL_2024_EDITABLE_rojo.png" alt="Partner 2">
+            <img src="images/Chile_UniversidaddeConcepcion_UDEC_15_.jpg" alt="Partner 3">
+            <img src="images/ucl2.png" alt="Partner 4">
+            <img src="images/vref-logo.png" alt="Partner 5">
+        </div>
+    </div>
+</section>
         <section class="page intro-page" data-index="1">
             <h1>Background and motivation</h1>
             <p> </p>
@@ -430,6 +616,15 @@
             document.getElementById('info-box'),
             backToIntroBtn 
         ];
+
+        function goToPage(index) {
+            const mainContainer = document.getElementById('main-container');
+            const pageHeight = window.innerHeight;
+            mainContainer.scrollTo({
+                top: index * pageHeight,
+                behavior: 'smooth'
+            });
+        }
 
         // --- DICIONÁRIOS DE DADOS ---
         // (Seus objetos attributeMap, attributeDescriptions e invertedAttributes permanecem aqui, sem alterações)
@@ -574,6 +769,22 @@
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
+
+                    const scrollIndicator = document.getElementById('scroll-indicator');
+
+                    if (entry.isIntersecting) {
+                        const pageIndex = parseInt(entry.target.dataset.index);
+                        
+                        // OCULTAR o indicador de scroll quando chegar na última página (Mapa)
+                        if (pageIndex === totalPages - 1) {
+                            scrollIndicator.style.opacity = '0';
+                            // ... sua lógica atual de ocultar a barra de progresso ...
+                        } else {
+                            scrollIndicator.style.opacity = '1';
+                            // ... sua lógica atual de mostrar a barra de progresso ...
+                        }
+                    }
+                    
                     if (entry.isIntersecting) {
                         const pageIndex = parseInt(entry.target.dataset.index);
                         // A fórmula da barra de progresso está correta
