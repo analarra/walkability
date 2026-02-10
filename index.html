@@ -736,8 +736,22 @@
                     displayCity();
                 })
                 .catch(error => console.error("Erro ao carregar o GeoJSON:", error));
-        }
 
+            // Carregar e destacar o limite do bairro
+            fetch('images/Bairros.geojson')
+                .then(response => response.json())
+                .then(data => {
+                    L.geoJSON(data, {
+                        style: {
+                            color: "#7bc4ff", // Cor da linha
+                            weight: 2,        // Espessura
+                            opacity: 0.85,
+                            fillColor: "#B0B0B0",
+                            fillOpacity: 0.4  // Preenchimento leve
+                        }
+                    }).addTo(map);
+                });
+        }
 
         // --- FUNÇÕES DE LÓGICA DO MAPA (REUTILIZADAS) ---
         function getColor(value, breaks, isInverted = false) { if (value === undefined || value === null) return '#a0a0a0'; if (!breaks || breaks.q3 === undefined) return '#a0a0a0'; if (isInverted) { return value <= breaks.q1 ? '#1a9850' : value <= breaks.q2 ? '#91cf60' : value <= breaks.q3 ? '#fdae61' : '#d73027'; } else { return value <= breaks.q1 ? '#d73027' : value <= breaks.q2 ? '#fdae61' : value <= breaks.q3 ? '#91cf60' : '#1a9850'; } }
