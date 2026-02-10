@@ -409,8 +409,9 @@
             display: block;
         }
 
+        /* Caixa branca de novo se um dia precisar
         #logo-container {
-            /* Mantendo suas configurações de posicionamento */
+            /* Mantendo suas configurações de posicionamento *//*
             position: fixed;
             top: 10px;
             right: 10px;
@@ -421,6 +422,23 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
             display: flex;
             align-items: center;
+        }*/
+
+        #logo-container {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1001;
+            
+            /* MUDANÇA AQUI: Fundo transparente e sem sombra */
+            background: transparent;
+            box-shadow: none;
+            
+            padding: 8px 12px;
+            border-radius: 8px; /* Opcional: pode remover se não quiser bordas arredondadas no elemento transparente */
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         /* Estilo para o texto ao lado do logo */
@@ -694,15 +712,25 @@
 
         // --- FUNÇÃO ÚNICA PARA INICIALIZAR O MAPA E OS DADOS ---
         function initializeMapAndData() {
+            // 1. Verificação de segurança: só roda se o mapa ainda não existir
             if (mapInitialized) return;
             mapInitialized = true;
-            
+
+            // 2. Inicializa o mapa APENAS UMA VEZ
             map = L.map('map', { zoomControl: false }).setView([-22.9, -43.2], 4);
+
+            // 3. Cria o painel para os bairros (Z-index alto para ficar no topo)
+            map.createPane('bairrosTopPane');
+            map.getPane('bairrosTopPane').style.zIndex = 650; 
+            map.getPane('bairrosTopPane').style.pointerEvents = 'none'; // Permite clicar nas ruas abaixo
+
+            // 4. Adiciona controles e camada base
             L.control.zoom({ position: 'bottomleft' }).addTo(map);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
+            // 5. Carregar os dados das ruas (meu_mapa.geojson)
             fetch("meu_mapa.geojson")
                 .then(response => response.json())
                 .then(data => {
@@ -724,6 +752,7 @@
                         infoBox.classList.toggle('collapsed');
                         infoBoxToggle.innerHTML = infoBox.classList.contains('collapsed') ? '&laquo;' : '&raquo;';
                     });
+
                     citySelector.addEventListener('change', displayCity);
                     attributeSelector.addEventListener('change', () => {
                         if (geojsonLayer) {
@@ -735,22 +764,25 @@
                     
                     displayCity();
                 })
-                .catch(error => console.error("Erro ao carregar o GeoJSON:", error));
+                .catch(error => console.error("Erro ao carregar o GeoJSON das ruas:", error));
 
-            // Carregar e destacar o limite do bairro
+            // 6. Carregar o limite dos bairros (Bairros.geojson) usando o painel superior
             fetch('images/Bairros.geojson')
                 .then(response => response.json())
                 .then(data => {
                     L.geoJSON(data, {
+                        pane: 'bairrosTopPane', 
+                        interactive: false, // <--- ADICIONE ESTA LINHA AQUI
                         style: {
-                            color: "#7bc4ff", // Cor da linha
-                            weight: 2,        // Espessura
-                            opacity: 0.85,
+                            color: "#895129",
+                            weight: 1.25,
+                            opacity: 0.75,
                             fillColor: "#B0B0B0",
-                            fillOpacity: 0.4  // Preenchimento leve
+                            fillOpacity: 0.4
                         }
                     }).addTo(map);
-                });
+                })
+                .catch(error => console.error("Erro ao carregar o GeoJSON dos bairros:", error));
         }
 
         // --- FUNÇÕES DE LÓGICA DO MAPA (REUTILIZADAS) ---
