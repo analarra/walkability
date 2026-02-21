@@ -353,6 +353,23 @@
             overflow: hidden;
         }
 
+        /* Container específico para a tabela dentro do visualizador */
+        .table-scroll-container {
+            flex-grow: 1; /* Ocupa todo o espaço abaixo do select/título */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow: hidden; /* Trava o scroll nativo */
+            width: 100%;
+        }
+
+        #excel-viewer table {
+            width: 100%;
+            transform-origin: top center; /* Escala a partir do topo */
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-collapse: collapse;
+        }
+
         .excel-controls {
             padding: 10px 15px;
             background-color: #f7f7f7;
@@ -370,32 +387,37 @@
             border: 1px solid #ccc;
         }
 
+        /* Ajuste no container para permitir a escala */
         #table-container {
             padding: 0;
-            overflow: auto; /* Adiciona barras de rolagem se a tabela for grande */
-            flex-grow: 1; /* Faz a área da tabela ocupar todo o espaço restante */
-
-            /* --- ADICIONE ESTA LINHA --- */
-            min-width: 0; /* Corrige o bug de overflow em containers flex */
-        }
-
-        /* Estilos para a tabela gerada */
-        #table-container table {
+            overflow: hidden; 
+            flex-grow: 1;
+            display: flex;
+            justify-content: center; /* Centraliza a tabela horizontalmente */
+            align-items: flex-start;   /* Mantém a tabela no topo */
             width: 100%;
-            border-collapse: collapse; /* Une as bordas das células */
+            min-width: 0;
         }
+
+        #table-container table {
+            transform-origin: top center; /* Garante que o zoom reduza em direção ao centro */
+            margin: 0 auto;
+        }
+
         #table-container th, #table-container td {
             border: 1px solid #ddd;
             padding: 8px 12px;
             text-align: left;
             white-space: nowrap; /* Evita que o texto quebre linha */
         }
+
         #table-container th {
             background-color: #f2f2f2;
             font-weight: bold;
             position: sticky; /* Cabeçalho fixo no topo ao rolar */
             top: 0;
         }
+        
         /* Realça a primeira linha de dados da tabela */
         #table-container tbody tr:first-child {
             background-color: #4298fa; /* Um azul bem claro para destaque */
@@ -517,10 +539,10 @@
         }
 
         .hero-logo-img {
-            max-width: 150px; /* Define um limite de largura para o logo */
+            max-width: 225px; /* Define um limite de largura para o logo */
             width: 100%;      /* Faz ele ser responsivo */
             height: auto;
-            max-height: 150px; /* Limita a altura para não empurrar o texto muito para baixo */
+            max-height: 250px; /* Limita a altura para não empurrar o texto muito para baixo */
             display: block;
             margin: 0 auto;
         }
@@ -535,6 +557,107 @@
             overflow: hidden;
             clip: rect(0, 0, 0, 0);
             border: 0;
+        }
+
+        /* --- ESTILO EXCLUSIVO PARA A CAIXA DA METODOLOGIA --- */
+
+        #methodology-page h1 {
+            font-size: 2.2rem !important; /* Diminui um pouco o tamanho (era geralmente 2.5rem ou 3rem) */
+            margin-top: -10px !important;  /* "Sobe" o título em relação ao padding da caixa */
+            margin-bottom: 15px !important; /* Espaço entre o título e a imagem */
+            text-align: center;
+            width: 100%;
+        }
+
+        #methodology-page {
+            /* Substitua pelo caminho correto da sua imagem */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                            url('images/background.png'); 
+            
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            
+            /* Garante que o fundo não se mova se houver scroll interno */
+            background-attachment: scroll;
+
+            /* Faz o container da página permitir que a caixa se expanda */
+            display: flex !important;
+            align-items: stretch !important; 
+            justify-content: stretch !important;
+        }
+
+        #methodology-page .hero-box {
+            /* 1. Removemos os limites de tamanho padrão apenas aqui */
+            max-width: none !important; 
+            width: auto !important;
+            height: auto !important;
+
+            /* 2. CONTROLE DAS MARGENS (Regule aqui o tamanho da caixa) */
+            /* Diminua estes valores para a caixa ficar MAIOR */
+            /* Aumente estes valores para a caixa ficar MENOR */
+            margin-top: 4vh !important;     /* Margem Superior */
+            margin-bottom: 4vh !important;  /* Margem Inferior */
+            margin-left: 4vw !important;    /* Margem Esquerda */
+            margin-right: 4vw !important;   /* Margem Direita */
+
+            /* 3. Espaço interno e alinhamento */
+            padding: 40px !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            flex: 1; /* Ocupa o espaço máximo permitido pelas margens */
+        }
+
+        #methodology-page #methodology-slider {
+            flex-grow: 1;
+            width: 100%;
+            position: relative; /* ADICIONE ISSO: Referência para as imagens */
+            /* Remova o display: flex daqui se for usar position: absolute nas imagens */
+        }
+
+        #methodology-page .methodology-slide {
+            /* ADICIONE ESTAS 4 LINHAS ABAIXO */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); 
+            
+            max-width: 95%; 
+            height: auto;
+            max-height: 70vh; 
+            object-fit: contain;
+            
+            /* Mantenha a transição que já criamos */
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+        }
+
+        #methodology-page .methodology-slide.active {
+            opacity: 1;
+        }
+
+        .timer-container {
+            display: none;
+            width: 100%;
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        #timer-bar {
+            width: 0%;
+            height: 100%;
+            background: #4298fa;
+        }
+
+        #slide-caption {
+            font-weight: bold;
+            color: #555;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -562,7 +685,7 @@
     </div>
 
     <div id="main-container">
-        <section class="page intro-page" id="hero-page" data-index="0">
+        <section class="page active" id="hero-page" data-index="0">
     <div class="hero-box">
         <div class="main-logo-wrapper">
             <img src="images/WALKC.png" alt="WalkUScan Logo" class="hero-logo-img">
@@ -572,9 +695,9 @@
         <p>A Comprehensive Index for Enhancing Pedestrian-Friendly Environments in Latin American Cities</p>
         
         <div class="hero-logos">
-            <img src="images/UFRGS.jpg" alt="Partner 1">
+            <img src="images/UFRGS.png" alt="Partner 1">
             <img src="images/LOG_UN_INTERNACIONAL_2024_EDITABLE_rojo.png" alt="Partner 2">
-            <img src="images/Chile_UniversidaddeConcepcion_UDEC_15_.jpg" alt="Partner 3">
+            <img src="images/Chile_UniversidaddeConcepcion_UDEC_15_.png" alt="Partner 3">
             <img src="images/ucl2.png" alt="Partner 4">
             <img src="images/vref-logo.png" alt="Partner 5">
         </div>
@@ -614,9 +737,24 @@
 
             </div>
         </section>
-        <section class="page intro-page" data-index="3">
-            <h1>Methodology</h1>
-            <p> </p>
+        <section class="page intro-page" id="methodology-page" data-index="3">
+            <div class="hero-box">
+                <h1>Methodology</h1>
+                
+                <div id="methodology-slider">
+                    <img src="images/MethodVREF/anim1.SVG" class="methodology-slide active" alt="Step 1">
+                    <img src="images/MethodVREF/anim2.SVG" class="methodology-slide" alt="Step 2">
+                    <img src="images/MethodVREF/anim3.SVG" class="methodology-slide" alt="Step 3">
+                    <img src="images/MethodVREF/anim4.SVG" class="methodology-slide" alt="Step 4">
+                    <img src="images/MethodVREF/anim5.SVG" class="methodology-slide" alt="Step 5">
+                    <img src="images/MethodVREF/anim6.SVG" class="methodology-slide" alt="Step 6">
+                </div>
+
+                <div class="timer-container">
+                    <div id="timer-bar"></div>
+                </div>
+                
+            </div>
         </section>
         <section class="page intro-page" data-index="4">
             <h1>Factors and Components</h1>
@@ -698,11 +836,207 @@
         function goToPage(index) {
             const mainContainer = document.getElementById('main-container');
             const pageHeight = window.innerHeight;
+
+            // Garante que o índice seja um número e esteja dentro do limite (0 a 5)
+            index = Math.max(0, Math.min(5, parseInt(index)));
+
             mainContainer.scrollTo({
                 top: index * pageHeight,
                 behavior: 'smooth'
             });
+
+            // Remove a classe active de todas e adiciona apenas na correta
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(p => p.classList.remove('active'));
+            
+            if (pages[index]) {
+                pages[index].classList.add('active');
+            }
+
+            // RESET TOTAL: Limpa travas e variáveis de animação
+            isScrolling = false;
+            scrollThreshold = 0;
+
+            /*// Se voltar para antes da Metodologia, reinicia a animação para o Step 1
+            if (index < 3) {
+                currentStep = 0;
+                if (typeof updatePresentation === "function") {
+                    updatePresentation(0);
+                }
+            }*/
         }
+
+        let currentStep = 0;
+        let currentPageIndex = 0; // Vamos usar essa variável para rastrear a página
+        const totalSteps = 6;
+        const stepImages = document.querySelectorAll('.methodology-slide');
+        const timerBar = document.getElementById('timer-bar');
+        /*const caption = document.getElementById('slide-caption');
+
+        // Legendas para cada imagem (ajuste conforme sua necessidade)
+        const captions = [
+            "Step 1: Initial Data Collection and Field Surveys",
+            "Step 2: GIS Mapping and Spatial Analysis",
+            "Step 3: Calculating Mesoscale Walkability Factors",
+            "Step 4: Integrating Microscale Built Environment Data",
+            "Step 5: Processing Individual Perceptions and VR Results",
+            "Step 6: Final Walkability Index Visualization"
+        ];*/
+
+        function updatePresentation(index) {
+            if (index >= totalSteps) index = 0;
+            if (index < 0) index = totalSteps - 1;
+
+            stepImages.forEach(img => img.classList.remove('active'));
+            stepImages[index].classList.add('active');
+            /*caption.textContent = captions[index];*/
+            currentStep = index;
+            startTimer();
+        }
+
+        let progressInterval;
+        function startTimer() {
+            clearInterval(progressInterval);
+            let progress = 0;
+            progressInterval = setInterval(() => {
+                progress += 1;
+                // Se quiser que a barra de tempo (mesmo escondida) pare no último slide:
+                if (currentStep === totalSteps - 1) {
+                    clearInterval(progressInterval);
+                    return;
+                }
+                
+                if (progress >= 100) {
+                    updatePresentation(currentStep + 1);
+                }
+            }, 100); 
+        }
+
+        let isScrolling = false;
+        let scrollThreshold = 0; // Acumulador de força do scroll
+
+        window.addEventListener('wheel', (e) => {
+            const activePage = document.querySelector('.page.active');
+            if (!activePage) return;
+
+            // Bloqueio Total: Se já estivermos em transição, mata qualquer outro comando
+            e.preventDefault(); 
+            if (isScrolling) return;
+
+            const index = parseInt(activePage.getAttribute('data-index'));
+            scrollThreshold += e.deltaY; // Soma a força do movimento atual
+
+            // Sensibilidade: 50 é um valor equilibrado. 
+            // Aumente para 100 se quiser que o scroll seja "mais pesado".
+            if (Math.abs(scrollThreshold) < 25) return;
+
+            const indoParaBaixo = scrollThreshold > 0;
+            const indoParaCima = scrollThreshold < 0;
+
+            // --- LÓGICA ESPECIAL PARA A METODOLOGIA (INDEX 3) ---
+            if (index === 3) {
+                const noUltimoPasso = (currentStep === totalSteps - 1);
+                const noPrimeiroPasso = (currentStep === 0);
+
+                // Se estiver no meio da animação (entre Step 1 e 6)
+                if ((indoParaBaixo && !noUltimoPasso) || (indoParaCima && !noPrimeiroPasso)) {
+                    if (indoParaBaixo) updatePresentation(currentStep + 1);
+                    else goToPage(2);
+                    
+                    resetScrollLock();
+                    return;
+                }
+                
+                // Se estiver nas bordas, troca de página
+                if (indoParaBaixo && noUltimoPasso) {
+                    goToPage(4);
+                } else if (indoParaCima && noPrimeiroPasso) {
+                    goToPage(2);
+                }
+                resetScrollLock();
+            } 
+            
+            // --- NAVEGAÇÃO GLOBAL (OUTRAS PÁGINAS) ---
+            else {
+                if (indoParaBaixo && index < 5) {
+                    goToPage(index + 1);
+                } else if (indoParaCima && index > 0 && index < 5) {
+                    goToPage(index - 1);
+                }
+                resetScrollLock();
+            }
+        }, { passive: false });
+
+        function resetScrollLock() {
+            isScrolling = true;
+            scrollThreshold = 0; // Zera a força acumulada para o próximo movimento
+            
+            // Tempo de trava (1200ms é o ideal para o 'smooth' terminar com folga)
+            setTimeout(() => {
+                isScrolling = false;
+            }, 100); 
+        }
+
+        document.addEventListener('keydown', (e) => {
+            // 1. Localiza a página que tem a classe 'active' no momento
+            const activePage = document.querySelector('.page.active');
+            if (!activePage) return;
+
+            // 2. Transforma o data-index em um número inteiro
+            let index = parseInt(activePage.getAttribute('data-index'));
+
+            // --- LÓGICA ESPECIAL PARA A METODOLOGIA (PÁGINA 3) ---
+            if (index === 3) {
+                if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+                    if (currentStep === 0) {
+                        if (typeof goToPage === "function") goToPage(2); // Volta para Objectives
+                    } else {
+                        if (typeof updatePresentation === "function") goToPage(2);
+                    }
+                    e.preventDefault();
+                    return;
+                }
+
+                if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+                    if (currentStep === 5) { // Último slide da animação
+                        if (typeof goToPage === "function") goToPage(4); // Avança para Factors
+                    } else {
+                        if (typeof updatePresentation === "function") updatePresentation(currentStep + 1);
+                    }
+                    e.preventDefault();
+                    return;
+                }
+            } 
+
+            // --- NAVEGAÇÃO NORMAL PARA AS OUTRAS PÁGINAS ---
+            // Seta para Baixo ou Direita (Avançar)
+            if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+                if (index < 5) { // Limite máximo de páginas (Map)
+                    if (typeof goToPage === "function") goToPage(index + 1);
+                }
+                e.preventDefault();
+            }
+            
+            // Seta para Cima ou Esquerda (Voltar)
+            else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+                if (index > 0 && index < 5) { // Limite mínimo de páginas (Home)
+                    if (typeof goToPage === "function") goToPage(index - 1);
+                }
+                e.preventDefault();
+            }
+        });
+
+        // Função auxiliar para evitar erros de "função não definida"
+        function executarGoToPage(index) {
+            if (typeof goToPage === "function") {
+                goToPage(index);
+            } else {
+                console.error("Erro: A função 'goToPage' não foi encontrada no script.");
+            }
+        }
+
+        // Iniciar a primeira vez
+        startTimer();
 
         // --- DICIONÁRIOS DE DADOS ---
         // (Seus objetos attributeMap, attributeDescriptions e invertedAttributes permanecem aqui, sem alterações)
@@ -844,14 +1178,14 @@
             function renderSheet(sheetName) {
                 if (!workbook) return;
                 
-                // Pega a planilha pelo nome
                 const worksheet = workbook.Sheets[sheetName];
-                
-                // Usa a biblioteca SheetJS para converter a planilha em uma tabela HTML
                 const htmlTable = XLSX.utils.sheet_to_html(worksheet);
                 
-                // Coloca a tabela gerada no container
                 tableContainer.innerHTML = htmlTable;
+
+                // NOVO: Chama a escala logo após inserir a tabela no HTML
+                // Usamos um pequeno timeout para garantir que o navegador já processou o novo tamanho
+                setTimeout(fitTableToScreen, 100);
             }
 
             // Busca o arquivo Excel
@@ -895,14 +1229,13 @@
             const pages = document.querySelectorAll('.page');
             const totalPages = pages.length;
             
-            // NOVO: Adiciona a funcionalidade de clique ao botão "Voltar"
-            backToIntroBtn.addEventListener('click', () => {
-                // Usa o método scrollTo para uma rolagem suave até o topo (primeira página)
-                mainContainer.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
+            // --- LOGICA DE CLIQUE PARA O BOTÃO VOLTAR ---
+            if (backToIntroBtn) {
+                backToIntroBtn.addEventListener('click', () => {
+                    // Chamamos a função mestra que resolveu todos os bugs anteriores
+                    goToPage(0); 
                 });
-            });
+            }
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -944,10 +1277,53 @@
                 });
             }, { threshold: 0.6 });
 
-            pages.forEach(page => observer.observe(page));
-
-            
+            pages.forEach(page => observer.observe(page))  
         });
+
+        // Executa assim que o site carregar
+        window.addEventListener('DOMContentLoaded', () => {
+            // 1. Força o estado inicial na página 0
+            goToPage(0); 
+        });
+
+        function fitTableToScreen() {
+            const container = document.getElementById('table-container');
+            const table = container.querySelector('table');
+
+            if (!table || !container) return;
+
+            // 1. Reset temporário para medir o tamanho real "natural" da tabela
+            table.style.transform = "scale(1)";
+            table.style.width = "auto"; // Permite que a tabela assuma sua largura real baseada no conteúdo
+            table.style.minWidth = "100%"; // Mas garante que ela ocupe ao menos toda a largura da caixa
+
+            // 2. Medidas do Container (Espaço disponível)
+            const availableWidth = container.offsetWidth;
+            const availableHeight = container.offsetHeight;
+
+            // 3. Medidas da Tabela (Tamanho real do conteúdo)
+            const actualWidth = table.scrollWidth;
+            const actualHeight = table.scrollHeight;
+
+            // 4. Calcula as proporções para ambos os eixos
+            const ratioW = availableWidth / actualWidth;
+            const ratioH = availableHeight / actualHeight;
+
+            // 5. Escolhe a MENOR escala para garantir que caiba nos dois sentidos
+            // Usamos 0.95 como margem de segurança para não colar nas bordas
+            let finalScale = Math.min(ratioW, ratioH, 1) * 1;
+
+            // 6. Aplica a transformação
+            table.style.transform = `scale(${finalScale})`;
+            
+            // Centralização: Como a largura mudou com a escala, ajustamos a largura do elemento
+            // para que o 'transform-origin: top center' mantenha tudo alinhado.
+            table.style.width = (actualWidth > availableWidth) ? "auto" : "100%";
+        }
+
+
+
+
     </script>
 </body>
 </html>
