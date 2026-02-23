@@ -853,6 +853,13 @@
                 pages[index].classList.add('active');
             }
 
+            // --- LÓGICA DO TIMER ---
+            if (targetIndex === 3) {
+                startTimer(); // Liga se for a página de Metodologia
+            } else {
+                stopTimer();  // Desliga em qualquer outra página
+            }
+
             // RESET TOTAL: Limpa travas e variáveis de animação
             isScrolling = false;
             scrollThreshold = 0;
@@ -909,7 +916,7 @@
                 if (progress >= 100) {
                     updatePresentation(currentStep + 1);
                 }
-            }, 100); 
+            }, 10); 
         }
 
         let isScrolling = false;
@@ -1037,6 +1044,13 @@
 
         // Iniciar a primeira vez
         startTimer();
+
+        function stopTimer() {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null; // Limpa a referência
+            }
+        }
 
         // --- DICIONÁRIOS DE DADOS ---
         // (Seus objetos attributeMap, attributeDescriptions e invertedAttributes permanecem aqui, sem alterações)
@@ -1239,35 +1253,38 @@
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-
                     const scrollIndicator = document.getElementById('scroll-indicator');
 
                     if (entry.isIntersecting) {
                         const pageIndex = parseInt(entry.target.dataset.index);
-                        
-                        // OCULTAR o indicador de scroll quando chegar na última página (Mapa)
+
+                        // 1. LÓGICA DO TIMER (Página 3: Methodology)
+                        // Liga o timer se entrar na página 3, desliga em qualquer outra
+                        if (pageIndex === 3) {
+                            startTimer();
+                        } else {
+                            stopTimer();
+                        }
+
+                        // 2. INDICADOR DE SCROLL
+                        // Oculta o indicador na última página (Mapa)
                         if (pageIndex === totalPages - 1) {
                             scrollIndicator.style.opacity = '0';
-                            // ... sua lógica atual de ocultar a barra de progresso ...
                         } else {
                             scrollIndicator.style.opacity = '1';
-                            // ... sua lógica atual de mostrar a barra de progresso ...
                         }
-                    }
-                    
-                    if (entry.isIntersecting) {
-                        const pageIndex = parseInt(entry.target.dataset.index);
-                        // A fórmula da barra de progresso está correta
+
+                        // 3. BARRA DE PROGRESSO
                         const progress = (pageIndex / (totalPages - 1)) * 100;
-                        
                         progressBar.style.width = `${progress > 100 ? 100 : progress}%`;
 
+                        // 4. UI DO MAPA E INICIALIZAÇÃO
                         if (pageIndex === totalPages - 1) {
                             progressBarContainer.classList.add('ui-hidden');
                             mapUiElements.forEach(el => el.classList.remove('ui-hidden'));
                             if (legendControl) legendControl.addTo(map);
                             
-                            initializeMapAndData();
+                            initializeMapAndData(); // Garante que o mapa só carregue quando visível
                         } else {
                             progressBarContainer.classList.remove('ui-hidden');
                             mapUiElements.forEach(el => el.classList.add('ui-hidden'));
