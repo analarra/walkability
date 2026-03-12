@@ -291,6 +291,35 @@
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             font-size: 20px; color: #555; padding: 0; padding-right: 2px;
         }
+
+        /* Esconde as páginas 2, 3 e 4 e remove do fluxo de scroll */
+        .page[data-index="2"].hidden-page,
+        .page[data-index="3"].hidden-page,
+        .page[data-index="4"].hidden-page {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        /* Estilo do Botão na Página de Background */
+        #learn-more-btn {
+            margin-top: 25px;
+            padding: 12px 24px;
+            background-color: #4298fa;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        #learn-more-btn:hover {
+            background-color: #357abd;
+        }
         
         /* --- BARRA DE PROGRESSO --- */
         #progress-bar-container {
@@ -347,7 +376,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             width: 100%;      /* <--- MUDANÇA: Ocupa toda a largura disponível */
             /* A linha max-width foi removida */
-            height: 85vh;     /* <--- MUDANÇA: Altura aumentada para 85% da tela */
+            height: 75vh;     /* <--- MUDANÇA: Altura aumentada para 85% da tela */
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -489,7 +518,7 @@
             padding: 50px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            max-width: 800px;
+            max-width: 1200px;
             width: 90%;
         }
 
@@ -502,7 +531,7 @@
 
         .hero-box p {
             color: #555;
-            font-size: 1.4rem;
+            font-size: 2.2rem;
             margin: 0 auto 40px auto;
             max-width: 100%;
         }
@@ -512,7 +541,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 30px;
+            gap: 40px;
             flex-wrap: wrap; /* Garante que em telas pequenas eles quebrem linha */
             margin-top: 20px;
             border-top: 1px solid #eee;
@@ -520,7 +549,7 @@
         }
 
         .hero-logos img {
-            height: 45px; /* Altura controlada para os logos pequenos */
+            height: 65px; /* Altura controlada para os logos pequenos */
             width: auto;
             filter: grayscale(100%); /* Deixa os logos em P&B para um look clean */
             opacity: 0.7;
@@ -539,12 +568,55 @@
         }
 
         .hero-logo-img {
-            max-width: 225px; /* Define um limite de largura para o logo */
+            max-width: 270px; /* Define um limite de largura para o logo */
             width: 100%;      /* Faz ele ser responsivo */
             height: auto;
             max-height: 250px; /* Limita a altura para não empurrar o texto muito para baixo */
             display: block;
             margin: 0 auto;
+        }
+
+        /* --- ESTILO EXCLUSIVO PARA A PÁGINA DE BACKGROUND (Página 1) --- */
+
+        #background-page {
+            /* Adiciona a imagem de fundo com um leve escurecimento para dar profundidade */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                            url('images/background.png'); /* Certifique-se de que o caminho está correto */
+            
+            /* Configurações para a imagem preencher toda a seção sem repetir */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            /* Garante que a seção ocupe toda a tela e alinhe a caixa branca no centro */
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+        }
+
+        #background-page .hero-box {
+            /* Define o tamanho conforme solicitado */
+            width: 75% !important;
+            height: 75% !important;
+            max-width: none !important; /* Remove o limite de 800px da home */
+            
+            /* Organização interna do texto */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+            
+            /* Garante que o texto seja rolável se a janela for pequena */
+            overflow-y: auto; 
+            padding: 60px !important;
+        }
+
+        #background-page .hero-box p {
+            /* Permite que o texto preencha a largura da nova caixa maior */
+            max-width: 90% !important; 
+            margin: 0 auto;
+            font-size: 1.6rem; /* Um pouco maior para preencher melhor o espaço de 80% */
         }
 
         /* Esconde o texto do H1 mas mantém para acessibilidade/SEO */
@@ -557,6 +629,31 @@
             overflow: hidden;
             clip: rect(0, 0, 0, 0);
             border: 0;
+        }
+
+        /* Esconde as páginas e remove do cálculo de altura */
+        .hidden-page {
+            display: none !important;
+        }
+
+        /* Estilo do novo botão na página Background */
+        #learn-more-btn {
+            margin-top: 30px;
+            padding: 12px 25px;
+            background-color: #4298fa;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(66, 152, 250, 0.3);
+        }
+
+        #learn-more-btn:hover {
+            background-color: #357abd;
+            transform: translateY(-2px);
         }
 
         /* --- ESTILO EXCLUSIVO PARA A CAIXA DA METODOLOGIA --- */
@@ -667,7 +764,7 @@
         <button id="menu-toggle">Pages ▾</button>
         <nav id="nav-menu" class="collapsed">
             <a href="javascript:void(0)" onclick="goToPage(0)">Home</a>
-            <a href="javascript:void(0)" onclick="goToPage(1)">Background</a>
+            <a href="javascript:void(0)" onclick="goToPage(1);">Background</a>
             <a href="javascript:void(0)" onclick="goToPage(2)">Objectives</a>
             <a href="javascript:void(0)" onclick="goToPage(3)">Methodology</a>
             <a href="javascript:void(0)" onclick="goToPage(4)">Factors</a>
@@ -703,11 +800,15 @@
         </div>
     </div>
 </section>
-        <section class="page intro-page" data-index="1">
-            <h1>Background and motivation</h1>
-            <p>Latin American cities face deep inequalities in access to urban opportunities, particularly affecting low-income populations living in peripheral areas and relying heavily on walking for daily mobility. Although walking is one of the most widely used transport modes in the region (and the most inclusive, healthy, and sustainable) it remains largely overlooked in public policy. Cultural, institutional, and infrastructural barriers make pedestrian travel unsafe and unattractive, reinforcing social and spatial inequalities across cities. At the same time, research shows that the decision to walk is shaped not only by urban form at broader scales, but also by everyday street-level experiences such as sidewalk quality, safety, comfort, and individual perceptions. Despite recent advances in virtual audits and immersive technologies, there is still a lack of integrated tools that combine objective urban data with how people actually experience walking—especially in the Latin American context. This project addresses that gap by developing evidence-based, people-centered tools to support more walkable, equitable, and inclusive cities. </p>
+        <section class="page intro-page" data-index="1" id="background-page">
+            <div class="hero-box"> <h1>Background and motivation</h1>
+                <p>Latin American cities face deep inequalities in access to urban opportunities, particularly affecting low-income populations living in peripheral areas and relying heavily on walking for daily mobility. Although walking is one of the most widely used transport modes in the region (and the most inclusive, healthy, and sustainable) it remains largely overlooked in public policy. Cultural, institutional, and infrastructural barriers make pedestrian travel unsafe and unattractive, reinforcing social and spatial inequalities across cities. At the same time, research shows that the decision to walk is shaped not only by urban form at broader scales, but also by everyday street-level experiences such as sidewalk quality, safety, comfort, and individual perceptions. Despite recent advances in virtual audits and immersive technologies, there is still a lack of integrated tools that combine objective urban data with how people actually experience walking—especially in the Latin American context. This project addresses that gap by developing evidence-based, people-centered tools to support more walkable, equitable, and inclusive cities. </p>
+            </div>
+            <button id="learn-more-btn" onclick="revealProjectDetails()">
+                Want to know more about this project?
+            </button>
         </section>
-        <section class="page intro-page" data-index="2">
+        <section class="page intro-page hidden-page" data-index="2">
             <h1>Objectives</h1>
 
             <div class="columns-container">
@@ -737,7 +838,7 @@
 
             </div>
         </section>
-        <section class="page intro-page" id="methodology-page" data-index="3">
+        <section class="page intro-page hidden-page" id="methodology-page" data-index="3">
             <div class="hero-box">
                 <h1>Methodology</h1>
                 
@@ -756,7 +857,7 @@
                 
             </div>
         </section>
-        <section class="page intro-page" data-index="4">
+        <section class="page intro-page hidden-page" data-index="4">
             <h1>Factors and Components</h1>
             
             <div id="excel-viewer">
@@ -832,45 +933,68 @@
             document.getElementById('info-box'),
             backToIntroBtn 
         ];
+        
+        // 1. Função para revelar as páginas escondidas
+        function revealProjectDetails() {
+            const hiddenPages = document.querySelectorAll('.project-details');
+            hiddenPages.forEach(p => p.classList.remove('hidden-page'));
+            
+            // Esconde o botão após clicar
+            document.getElementById('learn-more-btn').style.display = 'none';
+            
+            // Leva o usuário direto para a primeira página revelada (Objectives)
+            setTimeout(() => goToPage(2), 100);
+        }
 
         function goToPage(index) {
             const mainContainer = document.getElementById('main-container');
-            const pageHeight = window.innerHeight;
+            const pages = document.querySelectorAll('.page');
+            let targetIndex = parseInt(index);
+            let targetPage = document.querySelector(`.page[data-index="${targetIndex}"]`);
 
-            // Garante que o índice seja um número e esteja dentro do limite (0 a 5)
-            index = Math.max(0, Math.min(5, parseInt(index)));
+            if (!targetPage) return;
+
+            // Lógica de desbloqueio que já configuramos
+            if (targetPage.classList.contains('hidden-page')) {
+                const pagesToReveal = document.querySelectorAll('.page[data-index="2"], .page[data-index="3"], .page[data-index="4"]');
+                pagesToReveal.forEach(p => p.classList.remove('hidden-page'));
+                const btn = document.getElementById('learn-more-btn');
+                if (btn) btn.style.display = 'none';
+            }
 
             mainContainer.scrollTo({
-                top: index * pageHeight,
+                top: targetPage.offsetTop,
                 behavior: 'smooth'
             });
 
-            // Remove a classe active de todas e adiciona apenas na correta
-            const pages = document.querySelectorAll('.page');
             pages.forEach(p => p.classList.remove('active'));
-            
-            if (pages[index]) {
-                pages[index].classList.add('active');
+            targetPage.classList.add('active');
+
+            // --- CORREÇÃO DA TABELA ---
+            // Se o destino for a página 4 (Factors), forçamos o ajuste agora que está visível
+            if (targetIndex === 4) {
+                // Usamos um pequeno delay para garantir que o scroll terminou e o layout estabilizou
+                setTimeout(fitTableToScreen, 300);
             }
 
-            // --- LÓGICA DO TIMER ---
-            if (targetIndex === 3) {
-                startTimer(); // Liga se for a página de Metodologia
-            } else {
-                stopTimer();  // Desliga em qualquer outra página
-            }
-
-            // RESET TOTAL: Limpa travas e variáveis de animação
             isScrolling = false;
             scrollThreshold = 0;
+            if (targetIndex === 3) startTimer();
+            else stopTimer();
+        }
 
-            /*// Se voltar para antes da Metodologia, reinicia a animação para o Step 1
-            if (index < 3) {
-                currentStep = 0;
-                if (typeof updatePresentation === "function") {
-                    updatePresentation(0);
-                }
-            }*/
+        // Função para encontrar o próximo índice visível (pula as escondidas)
+        function getNextVisibleIndex(currentIndex, direction) {
+            const pages = document.querySelectorAll('.page');
+            let next = currentIndex + direction;
+
+            // Percorre as páginas na direção desejada até achar uma que NÃO esteja escondida
+            while (pages[next] && pages[next].classList.contains('hidden-page')) {
+                next += direction;
+            }
+
+            // Garante que o índice retornado esteja dentro dos limites (0 a 5)
+            return Math.max(0, Math.min(pages.length - 1, next));
         }
 
         let currentStep = 0;
@@ -966,9 +1090,9 @@
             // --- NAVEGAÇÃO GLOBAL (OUTRAS PÁGINAS) ---
             else {
                 if (indoParaBaixo && index < 5) {
-                    goToPage(index + 1);
-                } else if (indoParaCima && index > 0 && index < 5) {
-                    goToPage(index - 1);
+                    goToPage(getNextVisibleIndex(index, 1)); // Usa a função de pulo
+                } else if (indoParaCima && index > 0) {
+                    goToPage(getNextVisibleIndex(index, -1)); // Usa a função de pulo
                 }
                 resetScrollLock();
             }
@@ -1018,18 +1142,9 @@
             // --- NAVEGAÇÃO NORMAL PARA AS OUTRAS PÁGINAS ---
             // Seta para Baixo ou Direita (Avançar)
             if (e.key === "ArrowDown" || e.key === "ArrowRight") {
-                if (index < 5) { // Limite máximo de páginas (Map)
-                    if (typeof goToPage === "function") goToPage(index + 1);
-                }
-                e.preventDefault();
-            }
-            
-            // Seta para Cima ou Esquerda (Voltar)
-            else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
-                if (index > 0 && index < 5) { // Limite mínimo de páginas (Home)
-                    if (typeof goToPage === "function") goToPage(index - 1);
-                }
-                e.preventDefault();
+                if (index < 5) goToPage(getNextVisibleIndex(index, 1));
+            } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+                if (index > 0) goToPage(getNextVisibleIndex(index, -1));
             }
         });
 
@@ -1294,7 +1409,25 @@
                 });
             }, { threshold: 0.6 });
 
-            pages.forEach(page => observer.observe(page))  
+            pages.forEach(page => observer.observe(page))
+
+            const learnMoreBtn = document.getElementById('learn-more-btn');
+            if (learnMoreBtn) {
+                learnMoreBtn.addEventListener('click', function() {
+                    // 1. Seleciona e revela as páginas
+                    const hiddenPages = document.querySelectorAll('.page[data-index="2"], .page[data-index="3"], .page[data-index="4"]');
+                    hiddenPages.forEach(page => page.classList.remove('hidden-page'));
+
+                    // 2. Esconde o próprio botão
+                    this.style.display = 'none';
+
+                    // 3. Rola para a página 2 (Objectives)
+                    // Usamos um pequeno delay para o navegador processar que as páginas agora existem
+                    setTimeout(() => {
+                        goToPage(2);
+                    }, 100);
+                });
+            }
         });
 
         // Executa assim que o site carregar
@@ -1309,32 +1442,25 @@
 
             if (!table || !container) return;
 
-            // 1. Reset temporário para medir o tamanho real "natural" da tabela
-            table.style.transform = "scale(1)";
-            table.style.width = "auto"; // Permite que a tabela assuma sua largura real baseada no conteúdo
-            table.style.minWidth = "100%"; // Mas garante que ela ocupe ao menos toda a largura da caixa
+            // Se o container ainda não tiver tamanho (ainda escondido), não faz nada
+            if (container.offsetWidth === 0 || container.offsetHeight === 0) return;
 
-            // 2. Medidas do Container (Espaço disponível)
+            table.style.transform = "scale(1)";
+            table.style.width = "auto";
+            table.style.minWidth = "100%";
+
             const availableWidth = container.offsetWidth;
             const availableHeight = container.offsetHeight;
-
-            // 3. Medidas da Tabela (Tamanho real do conteúdo)
             const actualWidth = table.scrollWidth;
             const actualHeight = table.scrollHeight;
 
-            // 4. Calcula as proporções para ambos os eixos
             const ratioW = availableWidth / actualWidth;
             const ratioH = availableHeight / actualHeight;
 
-            // 5. Escolhe a MENOR escala para garantir que caiba nos dois sentidos
-            // Usamos 0.95 como margem de segurança para não colar nas bordas
+            // Pegamos a menor escala necessária para caber
             let finalScale = Math.min(ratioW, ratioH, 1) * 1;
 
-            // 6. Aplica a transformação
             table.style.transform = `scale(${finalScale})`;
-            
-            // Centralização: Como a largura mudou com a escala, ajustamos a largura do elemento
-            // para que o 'transform-origin: top center' mantenha tudo alinhado.
             table.style.width = (actualWidth > availableWidth) ? "auto" : "100%";
         }
 
