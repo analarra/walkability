@@ -303,11 +303,10 @@
             margin: 0 !important;
         }
 
-        /* Estilo do Botão na Página de Background */
         #learn-more-btn {
+            transition: all 0.3s ease;
             margin-top: 25px;
             padding: 12px 24px;
-            background-color: #4298fa;
             color: white;
             border: none;
             border-radius: 6px;
@@ -315,10 +314,13 @@
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background-color: #4298fa; /* Cor inicial azul */
         }
 
+        /* Efeito sutil ao passar o mouse */
         #learn-more-btn:hover {
-            background-color: #357abd;
+            filter: brightness(1.1);
+            transform: translateY(-2px);
         }
         
         /* --- BARRA DE PROGRESSO --- */
@@ -449,7 +451,7 @@
         
         /* Realça a primeira linha de dados da tabela */
         #table-container tbody tr:first-child {
-            background-color: #4298fa; /* Um azul bem claro para destaque */
+            background-color: #31800d; /* Um verde para destaque */
             font-weight: bold;       /* Deixa o texto em negrito */
         }
 
@@ -616,7 +618,7 @@
             /* Permite que o texto preencha a largura da nova caixa maior */
             max-width: 90% !important; 
             margin: 0 auto;
-            font-size: 1.6rem; /* Um pouco maior para preencher melhor o espaço de 80% */
+            font-size: 1.55rem; /* Um pouco maior para preencher melhor o espaço de 80% */
         }
 
         /* Esconde o texto do H1 mas mantém para acessibilidade/SEO */
@@ -631,24 +633,24 @@
             border: 0;
         }
 
-        /* Esconde as páginas e remove do cálculo de altura */
-        .hidden-page {
+        /* Isso mata a existência física da página no layout */
+        .page.hidden-page {
             display: none !important;
+            height: 0 !important;
+            min-height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            visibility: hidden !important;
+            overflow: hidden !important;
         }
 
-        /* Estilo do novo botão na página Background */
+        /* Garante que o botão nunca suma */
         #learn-more-btn {
-            margin-top: 30px;
-            padding: 12px 25px;
-            background-color: #4298fa;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(66, 152, 250, 0.3);
+            display: inline-block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            position: relative;
+            z-index: 999;
         }
 
         #learn-more-btn:hover {
@@ -756,6 +758,18 @@
             color: #555;
             margin-top: 10px;
         }
+
+        /* Esconde os itens do menu de navegação */
+        #nav-menu a.nav-hidden {
+            display: none !important;
+        }
+
+        /* Opcional: Garante que o menu se reorganize visualmente sem buracos */
+        #nav-menu {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
     </style>
 </head>
 <body>
@@ -764,10 +778,12 @@
         <button id="menu-toggle">Pages ▾</button>
         <nav id="nav-menu" class="collapsed">
             <a href="javascript:void(0)" onclick="goToPage(0)">Home</a>
-            <a href="javascript:void(0)" onclick="goToPage(1);">Background</a>
-            <a href="javascript:void(0)" onclick="goToPage(2)">Objectives</a>
-            <a href="javascript:void(0)" onclick="goToPage(3)">Methodology</a>
-            <a href="javascript:void(0)" onclick="goToPage(4)">Factors</a>
+            <a href="javascript:void(0)" onclick="goToPage(1)">Background</a>
+            
+            <a href="javascript:void(0)" onclick="goToPage(2)" class="nav-hidden">Objectives</a>
+            <a href="javascript:void(0)" onclick="goToPage(3)" class="nav-hidden">Methodology</a>
+            <a href="javascript:void(0)" onclick="goToPage(4)" class="nav-hidden">Factors</a>
+            
             <a href="javascript:void(0)" onclick="goToPage(5)" class="nav-map-btn">Map</a>
         </nav>
     </div>
@@ -804,9 +820,7 @@
             <div class="hero-box"> <h1>Background and motivation</h1>
                 <p>Latin American cities face deep inequalities in access to urban opportunities, particularly affecting low-income populations living in peripheral areas and relying heavily on walking for daily mobility. Although walking is one of the most widely used transport modes in the region (and the most inclusive, healthy, and sustainable) it remains largely overlooked in public policy. Cultural, institutional, and infrastructural barriers make pedestrian travel unsafe and unattractive, reinforcing social and spatial inequalities across cities. At the same time, research shows that the decision to walk is shaped not only by urban form at broader scales, but also by everyday street-level experiences such as sidewalk quality, safety, comfort, and individual perceptions. Despite recent advances in virtual audits and immersive technologies, there is still a lack of integrated tools that combine objective urban data with how people actually experience walking—especially in the Latin American context. This project addresses that gap by developing evidence-based, people-centered tools to support more walkable, equitable, and inclusive cities. </p>
             </div>
-            <button id="learn-more-btn" onclick="revealProjectDetails()">
-                Want to know more about this project?
-            </button>
+            <button id="learn-more-btn" data-open="false">Want to know more about this project?</button>
         </section>
         <section class="page intro-page hidden-page" data-index="2">
             <h1>Objectives</h1>
@@ -938,9 +952,6 @@
         function revealProjectDetails() {
             const hiddenPages = document.querySelectorAll('.project-details');
             hiddenPages.forEach(p => p.classList.remove('hidden-page'));
-            
-            // Esconde o botão após clicar
-            document.getElementById('learn-more-btn').style.display = 'none';
             
             // Leva o usuário direto para a primeira página revelada (Objectives)
             setTimeout(() => goToPage(2), 100);
@@ -1107,6 +1118,51 @@
                 isScrolling = false;
             }, 100); 
         }
+
+        // Usamos o document para que o evento nunca se perca
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.id === 'learn-more-btn') {
+                const btn = e.target;
+                const pages = document.querySelectorAll('.page[data-index="2"], .page[data-index="3"], .page[data-index="4"]');
+                
+                // Seleciona especificamente os links do menu que levam a essas páginas
+                // Estamos buscando pelos links que chamam goToPage(2), (3) ou (4)
+                const navButtons = document.querySelectorAll('#nav-menu a[onclick*="goToPage(2)"], #nav-menu a[onclick*="goToPage(3)"], #nav-menu a[onclick*="goToPage(4)"]');
+                
+                const isCurrentlyOpen = btn.getAttribute('data-open') === 'true';
+
+                if (isCurrentlyOpen) {
+                    // --- AÇÃO: ESCONDER TUDO ---
+                    pages.forEach(p => p.classList.add('hidden-page'));
+                    
+                    // Esconde também os botões do menu
+                    navButtons.forEach(navBtn => navBtn.classList.add('nav-hidden'));
+                    
+                    btn.innerText = "Want to know more about this project?";
+                    btn.style.backgroundColor = "#4298fa";
+                    btn.setAttribute('data-open', 'false');
+
+                    if (typeof goToPage === "function") goToPage(1);
+                    window.scrollTo(0, 0);
+
+                } else {
+                    // --- AÇÃO: MOSTRAR TUDO ---
+                    pages.forEach(p => p.classList.remove('hidden-page'));
+                    
+                    // Mostra os botões do menu novamente
+                    navButtons.forEach(navBtn => navBtn.classList.remove('nav-hidden'));
+                    
+                    btn.innerText = "Show less about the project";
+                    btn.style.backgroundColor = "#666";
+                    btn.setAttribute('data-open', 'true');
+
+                    setTimeout(() => {
+                        if (typeof goToPage === "function") goToPage(2);
+                    }, 100);
+                }
+            }
+        });
+
 
         document.addEventListener('keydown', (e) => {
             // 1. Localiza a página que tem a classe 'active' no momento
@@ -1411,23 +1467,6 @@
 
             pages.forEach(page => observer.observe(page))
 
-            const learnMoreBtn = document.getElementById('learn-more-btn');
-            if (learnMoreBtn) {
-                learnMoreBtn.addEventListener('click', function() {
-                    // 1. Seleciona e revela as páginas
-                    const hiddenPages = document.querySelectorAll('.page[data-index="2"], .page[data-index="3"], .page[data-index="4"]');
-                    hiddenPages.forEach(page => page.classList.remove('hidden-page'));
-
-                    // 2. Esconde o próprio botão
-                    this.style.display = 'none';
-
-                    // 3. Rola para a página 2 (Objectives)
-                    // Usamos um pequeno delay para o navegador processar que as páginas agora existem
-                    setTimeout(() => {
-                        goToPage(2);
-                    }, 100);
-                });
-            }
         });
 
         // Executa assim que o site carregar
