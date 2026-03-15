@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>WalkUScan - Interactive Map</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <style>
+        /* 1. Reset para garantir que o mapa e os elementos flutuem corretamente */
+        html, body { 
+            margin: 0; 
+            padding: 0; 
+            height: 100%; 
+            width: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden; /* Evita que a página role para baixo */
+        }
+
+        /* 2. O mapa deve ocupar a tela inteira ao fundo */
+        #map { 
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%; 
+            z-index: 1; /* Fica por trás de tudo */
+        }
+
+        /* 3. Botão Go Back (Canto superior esquerdo) */
+        #back-home {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 1002;
+            background: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* 4. Controles de Cidade e Atributo (Topo Centro) */
+        /* --- ESTILO DOS CONTROLES (TOPO CENTRO) --- */
+        #controls {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1001;
+            background: white;
+            padding: 10px 18px;
+            border-radius: 10px;
+            display: flex;
+            gap: 25px; /* Espaço entre o bloco City e o bloco Attribute */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            align-items: flex-start; /* Alinha os blocos pelo topo */
+        }
+
+        /* Garante que o rótulo fique EM CIMA do select */
+        .control-group {
+            display: flex;
+            flex-direction: column; /* Empilha o label e o select verticalmente */
+            gap: 5px; /* Espaço entre o texto e a caixa de seleção */
+        }
+
+        .control-group label {
+            font-size: 11px;
+            font-weight: bold;
+            color: #777;
+            text-transform: none; /* Mantém como você escreveu */
+        }
+
+        /* Estilo das caixas de seleção (Selects) */
+        .control-group select {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .control-group select:hover {
+            border-color: #bbb;
+        }
+
+        /* 5. Info-box (Canto Central Direito) */
+        #info-box {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 280px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            z-index: 1001;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Estilo interno da Info-box */
+        #info-box h4 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            color: #222;
+        }
+        #info-box p {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        /* Estilos do Botão Toggle (Aquele para esconder a caixa) */
+        #info-box-toggle {
+            position: absolute;
+            left: -35px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 35px;
+            height: 60px;
+            background: white;
+            border: none;
+            border-radius: 8px 0 0 8px;
+            box-shadow: -4px 0 8px rgba(0,0,0,0.05);
+            cursor: pointer;
+            font-size: 18px;
+            color: #666;
+        }
+
+        /* Classe para esconder a caixa */
+        #info-box.collapsed {
+            transform: translate(calc(100% + 20px), -50%);
+        }
+
+        /* --- ESTILO COMPLETO DA LEGENDA --- */
+        .legend {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1001;
+            width: 230px;
+            color: #333;
+        }
+
+        .legend-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 13px;
+            display: block;
+        }
+
+        .legend-bar {
+            display: flex;
+            height: 12px;
+            border-radius: 3px;
+            overflow: hidden; /* Faz as cores ficarem dentro do arredondamento */
+            margin-bottom: 5px;
+        }
+
+        .legend-bar span { 
+            flex: 1; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white; 
+            font-weight: bold; 
+            font-size: 10px; /* Tamanho do texto Q1, Q2... */
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5); /* Sombra para ler melhor no amarelo/verde claro */
+        }
+
+        /* Cores da barra (Mesmas do original) */
+        .legend-q1 { background: #d73027; flex: 1; }
+        .legend-q2 { background: #fdae61; flex: 1; }
+        .legend-q3 { background: #91cf60; flex: 1; }
+        .legend-q4 { background: #1a9850; flex: 1; }
+
+        .legend-labels {
+            position: relative;
+            height: 30px;
+            font-size: 11px;
+        }
+
+        .legend-labels span {
+            position: absolute;
+            width: 40px;
+            text-align: center;
+            transform: translateX(-50%);
+        }
+
+        .legend-labels .label-start { left: 0; transform: none; text-align: left; }
+        .legend-labels .label-q1 { left: 25%; }
+        .legend-labels .label-q2 { left: 50%; }
+        .legend-labels .label-q3 { left: 75%; }
+        .legend-labels .label-end { right: 0; left: auto; transform: none; text-align: right; }
+
+        .legend-labels small {
+            display: block;
+            font-size: 9px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        /* Garante que possamos clicar nas ruas através da camada de bairros */
+        .leaflet-bairros-pane {
+            pointer-events: none;
+        }
+
+        /* --- POSICIONAMENTO DO LOGOTIPO --- */
+        #logo-container {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1001;
+            
+            /* MUDANÇA AQUI: Fundo transparente e sem sombra */
+            background: transparent;
+            box-shadow: none;
+            
+            padding: 8px 12px;
+            border-radius: 8px; /* Opcional: pode remover se não quiser bordas arredondadas no elemento transparente */
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #logo-container img {
+            height: 35px;       /* Altura elegante para o logotipo */
+            width: auto;        /* Mantém a proporção original */
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="logo-container">
+        <img src="../images/WalkLOGORED.png" alt="WalkUScan Logo">
+    </div>
+
+    <a href="../index.html" id="back-home">← Go Back</a>
+
+    <div id="controls">
+        <div class="control-group">
+            <label>City</label>
+            <select id="city-select">
+                <option value="POA">Porto Alegre</option>
+                <option value="Concepcion">Concepción</option>
+                <option value="Barranquilla">Barranquilla</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label>Attribute</label>
+            <select id="attribute-select"></select>
+        </div>
+    </div>
+
+    <div id="info-box">
+        <button id="info-box-toggle" title="Hide/Show Information">»</button>
+        
+        <h4 id="info-box-title"></h4>
+        <p id="info-box-content"></p>
+    </div>
+
+    <div id="map"></div>
+
+    <script>
+        // --- REFERÊNCIAS AO DOM ---
+        // Adicionamos estas variáveis que as funções abaixo precisam para funcionar
+        const citySelector = document.getElementById('city-select');
+        const attributeSelector = document.getElementById('attribute-select');
+        const infoBoxTitle = document.getElementById('info-box-title');
+        const infoBoxContent = document.getElementById('info-box-content');
+        const infoBox = document.getElementById('info-box');
+        const infoBoxToggle = document.getElementById('info-box-toggle');
+
+        infoBoxToggle.addEventListener('click', () => {
+            // Alterna a classe 'collapsed' que criamos no CSS
+            infoBox.classList.toggle('collapsed');
+            
+            // Troca o ícone da seta dependendo do estado
+            if (infoBox.classList.contains('collapsed')) {
+                infoBoxToggle.innerHTML = '«'; // Seta para abrir
+            } else {
+                infoBoxToggle.innerHTML = '»'; // Seta para fechar
+            }
+        });
+        
+        let map, geojsonLayer, legendControl;
+        let cityData = {};
+        let quartileBreaks = {};
+
+        // Dicionários de Dados
+        const attributeMap = { 'F0_WI': 'Walkability Index', 'F1_DELSIDE': 'Delimited Sidewalks', 'F2_SIDEWID': 'Sidewalk Width', 'F3_QUALITY': 'Quality of Pavement', 'F4_INFRA': 'Pedestrian Infrastructure(Vulnearable People)', 'F5_OBSTACL': 'Obstacles on Sidewalk/Vehicles Parked on Sidewalks', 'F6_VEHSPEE': 'Vehicle Speed', 'F7_TRAFFIC': 'Traffic Flow', 'F8_TRAFFIC_DEVICES': 'Presence of Traffic Control Devices/Crosswalks', 'F9_TRAFFIC': 'Crashes', 'F10_CROSST': 'Crossing Time', 'F11_CAMERA': 'Presence of Security Cameras/Officers/Police Stations', 'F12_PEDFLO': 'Pedestrian Flow', 'F13_CRIMES': 'Number of Crimes', 'F14_LIGHT': 'Quality of Lighting', 'F15_COMMER': 'Commercial', 'F16_INSTIT': 'Institutional Density', 'F17_RESIDE': 'Residential', 'F18_PUBLIC': 'Public Transport', 'F19_GREENA': 'Green Areas', 'F20_TREES': 'Presence of Trees', 'F21_AESTHE': 'Aesthetics of Buildings ', 'F22_CLEANL': 'Cleanliness', 'F23_AIRPOL': 'Air Pollution', 'F24_WATER': 'Stagnant Water', 'F25_NOISE': 'Noise', 'F26_SLOPE': 'Slope', 'F27_LENGTH': 'Block Lenght(Normalized)' };
+        const attributeDescriptions = { 'F0_WI': "The <strong>Walkability Index</strong> measures how well a city's sidewalks provide a safe, continuous, and comfortable walking experience for pedestrians.<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F1_DELSIDE': "<strong>Measurement:</strong><br>Presence of delimeted sidewalk segments on the city's road network<br><br><strong>Range Value and Variable:</strong><br>1 - The edge of the sidewalk is clearly defined by a curb or a physical separation that distinguishes it from the roadway.<br>0 - The edge of the sidewalk is NOT clearly defined<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F2_SIDEWID': "<strong>Measurement:</strong><br>Sidewalk width evaluation (in meters)<br><br><strong>Range Value and Variable:</strong><br>1 - L ≥ 3 m<br>0.5 - 1,5 m ≤ L < 3 m<br>0 - L ≤ 1,5 m<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F3_QUALITY': "<strong>Measurement:</strong><br>Presence of cracks and/or gaps<br><br><strong>Range Value and Variable:</strong><br>1 - Sidewalk suitable for walking or jogging<br>0.5 - Practicable sidewalk but with caution<br>0 - Sidewalk in bad condition or no presence of a sidewalk<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F4_INFRA': "<strong>Measurement:</strong><br>Presence of ramps or special infrastructure for the vulnerable people<br><br><strong>Range Value and Variable:</strong><br>1 - Yes<br>0 - No<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F5_OBSTACL': "<strong>Measurement:</strong><br>Evaluation of the sidewalk remaining width<br><br><strong>Range Value and Variable:</strong><br>1 - No obstacles: The sidewalk has no obstacles that reduce its effective width<br>0.5 - Few: The sidewalk has obstacles that reduce its effective width in less than 50% of the evaluated segment.<br>0 - A lot: The sidewalk has obstacles that reduce its effective width in more than 50% of the evaluated segment<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F6_VEHSPEE': "<strong>Measurement:</strong><br>Average traffic speed (in km/h)<br><br><strong>Range Value and Variable:</strong><br>1 - V ≤ 20 km/h<br>0.5 - 20 km/h < V ≤ 40 km/h<br>0 - v > 40km/h<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F7_TRAFFIC': "<strong>Measurement:</strong><br>Vehicular flow (veh/h)<br><br><strong>Range Value and Variable:</strong><br>1 - Free-flowing, no vehicles passing by<br>0.5 - Moderate<br>0 - Congested, a lot of vehicles passing by<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F8_TRAFFIC_DEVICES': "<strong>Measurement:</strong><br>Are there traffic control devices in the segment?<br><br><strong>Range Value and Variable:</strong><br>1 - Yes (at least one traffic light or crosswalk)<br>0 - No<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F9_TRAFFIC': "<strong>Measurement:</strong><br>Are there traffic crashes in the segment?<br><br><strong>Range Value and Variable:</strong><br>1 - Absent (no crashes)<br>0.5 - Some accidents (limit of interval depends on the number of accidents in general)<br>0 - Present (There are occurrences of crashes)<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F10_CROSST': "<strong>Measurement:</strong><br>Walking time from sidewalk to sidewalk(in sec)(Street width/pedestrian speed:1m/s)<br><br><strong>Range Value and Variable:</strong><br>1 - t < 5s<br>0.5 - 5 < t < 30s<br>0 - t > 30s<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F11_CAMERA': "<strong>Measurement:</strong><br>Are there are security cameras/officers/police station in the segment?<br><br><strong>Range Value and Variable:</strong><br>1 - Yes<br>0 - No<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F12_PEDFLO': "<strong>Measurement:</strong><br>Number of pedestrians<br><br><strong>Range Value and Variable:</strong><br>1 - High<br>0.5 - Moderate<br>0 - Low<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F13_CRIMES': "<strong>Measurement:</strong><br>Presence of robberies, crimes, and/or homicides<br><br><strong>Range Value and Variable:</strong><br>1 - Absent<br>0 - Present (There are occurrences of robberies, crimes, and/or homicides in the area.)<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F14_LIGHT': "<strong>Measurement:</strong><br>Night lighting presence<br><br><strong>Range Value and Variable:</strong><br>1 - Covered area with excellent lighting<br>0.5 -  The current lighting allows for clear visibility in most areas, but there are some parts that have deficiencies or need improvement.<br>0 - No public lighting<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F15_COMMER': "<strong>Measurement:</strong><br>The density of commercial establishments<br><br><strong>Range Value and Variable:</strong><br>0 - Less than 300 commerc/km²<br>0.5 - Between 300 and 2000 commerc/km²<br>1 - More than 2000 commerc/km²<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment<br><br>***This density applies only to the city of Porto Alegre", 'F16_INSTIT': "<strong>Measurement:</strong><br>The density of institutional establishments<br><br><strong>Range Value and Variable:</strong><br>0 - Less than 32 inst/km²<br>0.5 - Between 32 and 112 inst/km²<br>1 - More than 312 inst/km²<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment<br><br>***This density applies only to the city of Porto Alegre", 'F17_RESIDE': "<strong>Measurement:</strong><br>Population density<br><br><strong>Range Value and Variable:</strong><br>0 - Low density: < 2500 hab/km²<br>0,5 - Medium density: 2500 - 13000 hab/km²<br>1 - High density: > 13000 hab/km²<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F18_PUBLIC': "<strong>Measurement:</strong><br>Is there public transport (stops, stations) in the grid?<br><br><strong>Range Value and Variable:</strong><br>1 - Yes<br>0 - No<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F19_GREENA': "<strong>Measurement:</strong><br>Is there green areas (any size, at least a small part of a park) in the grid?<br><br><strong>Range Value and Variable:</strong><br>1 - Yes<br>0 - No<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F20_TREES': "<strong>Measurement:</strong><br>Presence of trees <br><br><strong>Range Value and Variable:</strong><br>1 - Yes(at least 3 trees in ~100 m)<br>0 - No<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F21_AESTHE': "<strong>Measurement:</strong><br>Quality of the urban environment<br><br><strong>Range Value and Variable:</strong><br>1 - Pleasant environment with well-preserved buildings and urban furniture. The area is well-designed with thoughtful landscape architecture. Businesses, if present, have decorated or renovated facades and windows.<br>0.5 - Environment with an average environmental standard. The area has a mild atmosphere, reasonably preserved buildings, and minimal street furniture. Businesses, if present, have reasonably attractive facades and windows.<br>0 - Unattractive environment with no concern for aesthetic and visual aspects. Buildings are poorly maintained or degraded, and urban furniture is minimal or non-existent.<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F22_CLEANL': "<strong>Measurement:</strong><br>Cleaniless of the environment/Presence of rubbish<br><br><strong>Range Value and Variable:</strong><br>1 - Clean environment<br>0.5 - Small litter on the sidewalk in some sections (paper, cans, bottles, etc.)<br>0 - Large rubbish items, including cans and garbage bags, left on the sidewalk.<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F23_AIRPOL': "<strong>Measurement:</strong><br>Air Quality Index in the area<br><br><strong>Range Value and Variable:</strong><br>1 - AQI Good or Moderate (below the limit value recommended by the WHO 24-hour air quality guidelines)<br>0 - AQI Poor, Unhealthy, Severe, Hazardous<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F24_WATER': "<strong>Measurement:</strong><br>Presence of stagnant water<br><br><strong>Range Value and Variable:</strong><br>1 - No<br>0 - Yes<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F25_NOISE': "<strong>Measurement:</strong><br>Qualitative<br><br><strong>Range Value and Variable:</strong><br>1 - Low: The noise level is minimal and barely noticeable.<br>0.5 - Moderate: The noise level is noticeable but not create a feeling of discomfort. <br>0 - High: Constant traffic noise, honking and other sounds<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F26_SLOPE': "<strong>Measurement:</strong><br>Segment slope<br><br><strong>Range Value and Variable:</strong><br>1 - Slope < 2%<br>0.5 - Slope between 2% — 3%<br>0 - Slope > %3<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment", 'F27_LENGTH': "<strong>Measurement:</strong><br>Average block length<br><br><strong>Range Value and Variable:</strong><br><br>1 - Shorter segment<br>0 - Longer segment<br><br>*Segments with missing data are shown in gray<br><br>**Values shown are the average for both directions of the segment" };
+        const invertedAttributes = ['Dummy'];
+
+        function init() {
+            // Inicializa o mapa focado na região das cidades do projeto
+            map = L.map('map', { zoomControl: false }).setView([-30.03, -51.21], 13);
+            L.control.zoom({
+                position: 'bottomleft'
+            }).addTo(map);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+            // --- NOVO: CAMADA DE BAIRROS ---
+            // Cria um painel especial com z-index alto para os limites ficarem no topo
+            map.createPane('bairrosPane');
+            map.getPane('bairrosPane').style.zIndex = 650; 
+            map.getPane('bairrosPane').style.pointerEvents = 'none';
+
+            fetch("../images/Bairros.geojson") // Ajuste o caminho conforme sua pasta
+                .then(response => response.json())
+                .then(data => {
+                    L.geoJSON(data, {
+                        pane: 'bairrosPane',
+                        interactive: false, // Não reage a cliques
+                        style: {
+                            color: "#895129", // Cor da borda (marrom conforme original)
+                            weight: 1.25,
+                            opacity: 0.75,
+                            fillColor: "#B0B0B0",
+                            fillOpacity: 0.4 // Preenchimento bem leve
+                        }
+                    }).addTo(map);
+                })
+                .catch(error => console.error("Erro ao carregar Bairros.geojson:", error));
+
+            // Busca o arquivo GeoJSON na raiz
+            fetch("../meu_mapa.geojson")
+                .then(res => res.json())
+                .then(data => {
+                    // Filtragem idêntica à do index principal
+                    cityData.POA = { type: "FeatureCollection", features: data.features.filter(f => f.properties.CIDADE.trim().replace(/\s+/g, ' ') === 'Vias final POA') };
+                    cityData.Concepcion = { type: "FeatureCollection", features: data.features.filter(f => f.properties.CIDADE.trim() === 'eje_central_Concepcion') };
+                    cityData.Barranquilla = { type: "FeatureCollection", features: data.features.filter(f => f.properties.CIDADE.trim() === 'Baranquilla') };
+
+                    populateAttributes();
+                    displayCity(); // Mostra a cidade inicial
+                })
+                .catch(err => console.error("Erro ao carregar vetores:", err));
+
+            // Listeners para os menus
+            citySelector.onchange = displayCity;
+            attributeSelector.onchange = () => {
+                if (geojsonLayer) {
+                    geojsonLayer.setStyle(styleFeature);
+                    updateLegend();
+                    updateInfoBox();
+                }
+            };
+        }
+
+        // --- FUNÇÕES DE LÓGICA ESPACIAL ---
+
+        function getColor(value, breaks, isInverted = false) { 
+            if (value === undefined || value === null) return '#a0a0a0'; 
+            if (!breaks || breaks.q3 === undefined) return '#a0a0a0'; 
+            if (isInverted) { 
+                return value <= breaks.q1 ? '#1a9850' : value <= breaks.q2 ? '#91cf60' : value <= breaks.q3 ? '#fdae61' : '#d73027'; 
+            } else { 
+                return value <= breaks.q1 ? '#d73027' : value <= breaks.q2 ? '#fdae61' : value <= breaks.q3 ? '#91cf60' : '#1a9850'; 
+            } 
+        }
+
+        function styleFeature(feature) { 
+            const selectedAttribute = attributeSelector.value; 
+            const props = feature.properties; 
+            const isInverted = invertedAttributes.includes(selectedAttribute); 
+            if (selectedAttribute === 'F0_WI') { 
+                const value = props.F0_WI; 
+                return { color: getColor(value, quartileBreaks, false), weight: 4, opacity: 0.9 }; 
+            } else { 
+                const value = props[selectedAttribute]; 
+                const fixedBreaks = { q1: 0.25, q2: 0.50, q3: 0.75 }; 
+                return { color: getColor(value, fixedBreaks, isInverted), weight: 3, opacity: 0.8 }; 
+            } 
+        }
+
+        function onEachFeature(feature, layer) { 
+            layer.bindPopup(() => { 
+                const selectedAttributeKey = attributeSelector.value; 
+                const props = feature.properties; 
+                const value = props[selectedAttributeKey]; 
+                const address = props.ENDEREÇO; 
+                const displayName = attributeMap[selectedAttributeKey] || selectedAttributeKey; 
+                let formattedValue = (typeof value === 'number') ? value.toFixed(3) : (value || 'No Data');
+                return `<b>Street:</b> ${address || 'N/A'}<br><b>${displayName}:</b> ${formattedValue}`; 
+            }); 
+            layer.on('mouseover', function (e) { this.openPopup(e.latlng); });
+            layer.on('mouseout', function () { this.closePopup(); });
+        }
+
+        function calculateQuartiles(data, field) { 
+            const values = data.features.map(f => f.properties[field]).filter(v => v !== null && !isNaN(v)).sort((a, b) => a - b); 
+            if (values.length < 4) return { q1: 0.25, q2: 0.5, q3: 0.75 }; 
+            return { q1: values[Math.floor(values.length/4)], q2: values[Math.floor(values.length/2)], q3: values[Math.floor(values.length*3/4)] }; 
+        }
+
+        function populateAttributes() {
+            attributeSelector.innerHTML = '';
+            Object.keys(attributeMap).forEach(k => {
+                let opt = document.createElement('option');
+                opt.value = k; opt.textContent = attributeMap[k];
+                attributeSelector.appendChild(opt);
+            });
+        }
+
+        function displayCity() { 
+            const selectedCity = citySelector.value; 
+            const cityGeoJSON = cityData[selectedCity]; 
+            if (!cityGeoJSON) return; 
+            if (geojsonLayer) map.removeLayer(geojsonLayer); 
+            
+            quartileBreaks = calculateQuartiles(cityGeoJSON, 'F0_WI'); 
+            geojsonLayer = L.geoJSON(cityGeoJSON, { style: styleFeature, onEachFeature: onEachFeature }).addTo(map); 
+            
+            if (cityGeoJSON.features.length > 0) map.fitBounds(geojsonLayer.getBounds()); 
+            updateLegend(); 
+            updateInfoBox(); 
+        }
+
+        function updateLegend() {
+            if (legendControl) map.removeControl(legendControl);
+
+            const selectedKey = attributeSelector.value;
+            const isInverted = invertedAttributes.includes(selectedKey);
+            let breaks;
+
+            if (selectedKey === 'F0_WI') {
+                if (!quartileBreaks.q1) return;
+                breaks = quartileBreaks;
+            } else {
+                breaks = { q1: 0.25, q2: 0.50, q3: 0.75 };
+            }
+
+            legendControl = L.control({ position: 'bottomright' });
+            legendControl.onAdd = function () {
+                var div = L.DomUtil.create('div', 'legend');
+                
+                const q1Text = breaks.q1.toFixed(selectedKey === 'F0_WI' ? 3 : 2);
+                const q2Text = breaks.q2.toFixed(selectedKey === 'F0_WI' ? 3 : 2);
+                const q3Text = breaks.q3.toFixed(selectedKey === 'F0_WI' ? 3 : 2);
+
+                // --- LÓGICA DOS RÓTULOS Q1-Q4 ---
+                // Só mostramos o texto "Q1", "Q2" etc se for o Walkability Index (F0_WI)
+                const qLabels = (selectedKey === 'F0_WI') ? ['Q1', 'Q2', 'Q3', 'Q4'] : ['', '', '', ''];
+
+                let legendBarHtml = `
+                    <div class="legend-bar">
+                        <span class="legend-q1">${qLabels[0]}</span>
+                        <span class="legend-q2">${qLabels[1]}</span>
+                        <span class="legend-q3">${qLabels[2]}</span>
+                        <span class="legend-q4">${qLabels[3]}</span>
+                    </div>`;
+
+                // Lógica de Bad/Good que você já tem
+                const label0 = isInverted ? "Good" : "Bad";
+                const label1 = isInverted ? "Bad" : "Good";
+
+                let legendLabelsHtml = `
+                    <div class="legend-labels">
+                        <span class="label-start">0<small>${label0}</small></span>
+                        <span class="label-q1">${q1Text}</span>
+                        <span class="label-q2">${q2Text}</span>
+                        <span class="label-q3">${q3Text}</span>
+                        <span class="label-end">1<small>${label1}</small></span>
+                    </div>`;
+
+                div.innerHTML = `<span class="legend-title">${attributeMap[selectedKey]}</span>${legendBarHtml}${legendLabelsHtml}`;
+                return div;
+            };
+            legendControl.addTo(map);
+        }
+
+        function updateInfoBox() { 
+            const key = attributeSelector.value; 
+            infoBoxTitle.textContent = attributeMap[key]; 
+            infoBoxContent.innerHTML = attributeDescriptions[key] || "No description."; 
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
