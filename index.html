@@ -191,10 +191,65 @@
             padding: 40px;
         }
 
+        /* Container das duas colunas */
+        .intro-content {
+            display: flex;
+            align-items: center; /* Alinha verticalmente no centro */
+            gap: 40px;           /* Espaço entre texto e imagem */
+            margin-top: 20px;
+            text-align: left;    /* Garante que o texto fique à esquerda */
+        }
+
+        /* Coluna de Texto */
+        .intro-text {
+            flex: 1.2; /* Ocupa um pouco mais de espaço que a imagem */
+        }
+
+        .intro-text p {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        /* Coluna de Imagem */
+        .intro-image {
+            flex: 0.8;
+            display: flex;
+            justify-content: center;
+        }
+
+        .intro-image img {
+            width: 100%;
+            max-width: 450px;    /* Limita o tamanho da foto */
+            border-radius: 12px; /* Cantos arredondados para combinar com a hero-box */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            object-fit: cover;
+        }
+
+        /* Responsividade: em celulares, o texto fica em cima da imagem */
+        @media (max-width: 900px) {
+            .intro-content {
+                flex-direction: column;
+            }
+            .intro-image img {
+                max-width: 100%;
+            }
+        }
+
         /* Estilos para as páginas de introdução */
         .intro-page {
-            background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
-            color: #444;
+            /* 1. O código que você forneceu */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                            url('../images/background.png'); 
+            
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            /* 2. Configurações extras para garantir que preencha a tela */
+            width: 100%;
+            height: 100vh; /* Faz a seção ocupar a altura total da tela */
 
             /* --- NOVAS REGRAS DE ALINHAMENTO --- */
             /* Alinha o conteúdo ao topo (em vez de 'center') */
@@ -293,9 +348,9 @@
         }
 
         /* Esconde as páginas 2, 3 e 4 e remove do fluxo de scroll */
-        .page[data-index="2"].hidden-page,
         .page[data-index="3"].hidden-page,
-        .page[data-index="4"].hidden-page {
+        .page[data-index="4"].hidden-page,
+        .page[data-index="5"].hidden-page {
             display: none !important;
             visibility: hidden !important;
             height: 0 !important;
@@ -580,7 +635,7 @@
 
         /* --- ESTILO EXCLUSIVO PARA A PÁGINA DE BACKGROUND (Página 1) --- */
 
-        #background-page {
+        #challenge-page {
             /* Adiciona a imagem de fundo com um leve escurecimento para dar profundidade */
             background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
                             url('images/background.png'); /* Certifique-se de que o caminho está correto */
@@ -596,7 +651,7 @@
             align-items: center !important;
         }
 
-        #background-page .hero-box {
+        #challenge-page .hero-box {
             /* Define o tamanho conforme solicitado */
             width: 75% !important;
             height: 75% !important;
@@ -614,11 +669,269 @@
             padding: 60px !important;
         }
 
-        #background-page .hero-box p {
+        #challenge-page .hero-box p {
             /* Permite que o texto preencha a largura da nova caixa maior */
             max-width: 90% !important; 
             margin: 0 auto;
             font-size: 1.55rem; /* Um pouco maior para preencher melhor o espaço de 80% */
+        }
+
+        #solution-page {
+            /* Adiciona a imagem de fundo com um leve escurecimento para dar profundidade */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                            url('images/background.png'); /* Certifique-se de que o caminho está correto */
+            
+            /* Configurações para a imagem preencher toda a seção sem repetir */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            /* Garante que a seção ocupe toda a tela e alinhe a caixa branca no centro */
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+        }
+
+        #solution-page h1 {
+            font-size: 3rem; /* Ajuste este valor (ex: 40px, 3rem, etc.) */
+            line-height: 1.2;  /* Ajusta o espaçamento entre as linhas do título */
+            margin-bottom: 20px; /* Espaço entre o título e o texto abaixo */
+            color: #222;       /* Cor do título */
+        }
+
+        #solution-page .hero-box {
+            /* Define o tamanho conforme solicitado */
+            width: 75% !important;
+            height: 75% !important;
+            max-width: none !important; /* Remove o limite de 800px da home */
+            
+            /* Organização interna do texto */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+            
+            /* Garante que o texto seja rolável se a janela for pequena */
+            overflow-y: auto; 
+            padding: 60px !important;
+        }
+
+        #solution-page .hero-box p {
+            /* Permite que o texto preencha a largura da nova caixa maior */
+            max-width: 90% !important; 
+            margin: 0 auto;
+            font-size: 1.4rem; /* Um pouco maior para preencher melhor o espaço de 80% */
+        }
+
+        #walkability-page {
+            /* Adiciona a imagem de fundo com um leve escurecimento para dar profundidade */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                            url('images/background.png'); /* Certifique-se de que o caminho está correto */
+            
+            /* Configurações para a imagem preencher toda a seção sem repetir */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            /* Garante que a seção ocupe toda a tela e alinhe a caixa branca no centro */
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+        }
+
+        #walkability-page h1 {
+            font-size: 3rem; /* Ajuste este valor (ex: 40px, 3rem, etc.) */
+            line-height: 1.2;  /* Ajusta o espaçamento entre as linhas do título */
+            margin-bottom: 20px; /* Espaço entre o título e o texto abaixo */
+            color: #222;       /* Cor do título */
+        }
+
+        #walkability-page .hero-box {
+            /* Define o tamanho conforme solicitado */
+            width: 75% !important;
+            height: 75% !important;
+            max-width: none !important; /* Remove o limite de 800px da home */
+            
+            /* Organização interna do texto */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+            
+            /* Garante que o texto seja rolável se a janela for pequena */
+            overflow-y: auto; 
+            padding: 60px !important;
+        }
+
+        #walkability-page .hero-box p {
+            /* Permite que o texto preencha a largura da nova caixa maior */
+            max-width: 90% !important; 
+            margin: 0 auto;
+            font-size: 1.4rem; /* Um pouco maior para preencher melhor o espaço de 80% */
+        }
+
+        #measure-page {
+            /* Adiciona a imagem de fundo com um leve escurecimento para dar profundidade */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                            url('images/background.png'); /* Certifique-se de que o caminho está correto */
+            
+            /* Configurações para a imagem preencher toda a seção sem repetir */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            /* Garante que a seção ocupe toda a tela e alinhe a caixa branca no centro */
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+        }
+
+        #measure-page h1 {
+            font-size: 3rem; /* Ajuste este valor (ex: 40px, 3rem, etc.) */
+            line-height: 1.2;  /* Ajusta o espaçamento entre as linhas do título */
+            margin-bottom: 20px; /* Espaço entre o título e o texto abaixo */
+            color: #222;       /* Cor do título */
+        }
+
+        #measure-page .hero-box {
+            /* Define o tamanho conforme solicitado */
+            width: 75% !important;
+            height: 75% !important;
+            max-width: none !important; /* Remove o limite de 800px da home */
+            
+            /* Organização interna do texto */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+            
+            /* Garante que o texto seja rolável se a janela for pequena */
+            overflow-y: auto; 
+            padding: 60px !important;
+        }
+
+        #measure-page .hero-box p {
+            /* Permite que o texto preencha a largura da nova caixa maior */
+            max-width: 90% !important; 
+            margin: 0 auto;
+            font-size: 1.4rem; /* Um pouco maior para preencher melhor o espaço de 80% */
+        }
+
+        #science-page {
+            /* Adiciona a imagem de fundo com um leve escurecimento para dar profundidade */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                            url('images/background.png'); /* Certifique-se de que o caminho está correto */
+            
+            /* Configurações para a imagem preencher toda a seção sem repetir */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            /* Garante que a seção ocupe toda a tela e alinhe a caixa branca no centro */
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+        }
+
+        #science-page h1 {
+            font-size: 3rem; /* Ajuste este valor (ex: 40px, 3rem, etc.) */
+            line-height: 1.2;  /* Ajusta o espaçamento entre as linhas do título */
+            margin-bottom: 20px; /* Espaço entre o título e o texto abaixo */
+            color: #222;       /* Cor do título */
+        }
+
+        #science-page .hero-box {
+            /* Define o tamanho conforme solicitado */
+            width: 75% !important;
+            height: 75% !important;
+            max-width: none !important; /* Remove o limite de 800px da home */
+            
+            /* Organização interna do texto */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+            
+            /* Garante que o texto seja rolável se a janela for pequena */
+            overflow-y: auto; 
+            padding: 60px !important;
+        }
+
+        #science-page .hero-box p {
+            /* Permite que o texto preencha a largura da nova caixa maior */
+            max-width: 90% !important; 
+            margin: 0 auto;
+            font-size: 1.4rem; /* Um pouco maior para preencher melhor o espaço de 80% */
+        }
+
+        #othercity-page {
+            /* Adiciona a imagem de fundo com um leve escurecimento para dar profundidade */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                            url('images/background.png'); /* Certifique-se de que o caminho está correto */
+            
+            /* Configurações para a imagem preencher toda a seção sem repetir */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            /* Garante que a seção ocupe toda a tela e alinhe a caixa branca no centro */
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+        }
+
+        #othercity-page h1 {
+            font-size: 3rem; /* Ajuste este valor (ex: 40px, 3rem, etc.) */
+            line-height: 1.2;  /* Ajusta o espaçamento entre as linhas do título */
+            margin-bottom: 20px; /* Espaço entre o título e o texto abaixo */
+            color: #222;       /* Cor do título */
+        }
+
+        #othercity-page .hero-box {
+            /* Define o tamanho conforme solicitado */
+            width: 75% !important;
+            height: 75% !important;
+            max-width: none !important; /* Remove o limite de 800px da home */
+            
+            /* Organização interna do texto */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+            
+            /* Garante que o texto seja rolável se a janela for pequena */
+            overflow-y: auto; 
+            padding: 60px !important;
+        }
+
+        #othercity-page .hero-box p {
+            /* Permite que o texto preencha a largura da nova caixa maior */
+            max-width: 90% !important; 
+            margin: 0 auto;
+            font-size: 1.4rem; /* Um pouco maior para preencher melhor o espaço de 80% */
+        }
+
+        .toolkit-steps {
+            text-align: left;
+            margin-top: 30px;
+            padding-left: 20px; /* Recuo para os números não ficarem grudados na borda */
+        }
+
+        .toolkit-steps li {
+            font-size: 1.4rem;
+            line-height: 1.2;    /* Espaçamento entre linhas para facilitar a leitura */
+            margin-bottom: 20px; /* Espaço entre o tópico 1 e o tópico 2 */
+            color: #444;
+        }
+
+        .toolkit-steps li strong {
+            color: #000;         /* Título um pouco mais escuro que o corpo do texto */
+            font-weight: 700;
         }
 
         /* Esconde o texto do H1 mas mantém para acessibilidade/SEO */
@@ -656,6 +969,81 @@
         #learn-more-btn:hover {
             background-color: #357abd;
             transform: translateY(-2px);
+        }
+
+        /* --- ESTILO DA PÁGINA OBJECTIVES --- */
+
+        #objectives-page {
+            /* 1. O código que você forneceu */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                            url('../images/background.png'); 
+            
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            /* 2. Configurações extras para garantir que preencha a tela */
+            width: 100%;
+            height: 100vh; /* Faz a seção ocupar a altura total da tela */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #objectives-page .hero-box {
+            width: 85%;      /* Largura da caixa */
+            max-width: 1100px; 
+            padding: 40px;
+            text-align: left; /* Alinhamento do texto interno */
+        }
+
+        #objectives-page h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+            color: #333;
+        }
+
+        /* 1. O contêiner das duas colunas deve ocupar 100% da largura da hero-box */
+        .objectives-content {
+            display: flex !important;
+            flex-direction: row; /* Força ficar lado a lado */
+            gap: 40px;
+            width: 100%; /* Essencial para não esmagar */
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+
+        /* 2. A coluna da esquerda (Aim) */
+        .aim-section {
+            flex: 1; /* Ocupa 1 parte do espaço */
+            min-width: 300px; /* Impede que fique mais estreita que isso */
+        }
+
+        /* 3. A coluna da direita (Lista i, ii, iii...) */
+        .specific-objectives {
+            flex: 1.5; /* Ocupa 1.5 partes do espaço */
+            min-width: 400px; /* Garante espaço para o texto longo */
+        }
+
+        /* 4. Ajuste da fonte direto nos parágrafos e itens para não dar erro */
+        .aim-section p, 
+        .specific-objectives li {
+            font-size: 1.1rem !important; /* Ajuste aqui o tamanho (ex: 18px ou 1.1rem) */
+            line-height: 1.6 !important; /* Espaço entre linhas saudável */
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        /* Responsividade para telas menores */
+        @media (max-width: 900px) {
+            .objectives-content {
+                flex-direction: column;
+            }
+            #objectives-page .hero-box {
+                width: 95%;
+                padding: 20px;
+            }
         }
 
         /* --- ESTILO EXCLUSIVO PARA A CAIXA DA METODOLOGIA --- */
@@ -778,13 +1166,19 @@
         <button id="menu-toggle">Pages ▾</button>
         <nav id="nav-menu" class="collapsed">
             <a href="javascript:void(0)" onclick="goToPage(0)">Home</a>
-            <a href="javascript:void(0)" onclick="goToPage(1)">Background</a>
-            
-            <a href="javascript:void(0)" onclick="goToPage(2)" class="nav-hidden">Objectives</a>
-            <a href="javascript:void(0)" onclick="goToPage(3)" class="nav-hidden">Methodology</a>
-            <a href="javascript:void(0)" onclick="goToPage(4)" class="nav-hidden">Factors</a>
-            
-            <a href="javascript:void(0)" onclick="goToPage(5)" class="nav-map-btn">Map</a>
+            <a href="javascript:void(0)" onclick="goToPage(1)">Challenge</a>
+            <a href="javascript:void(0)" onclick="goToPage(2)">Solution</a> 
+
+            <a href="javascript:void(0)" onclick="goToPage(3)" class="nav-hidden">Objectives</a>
+            <a href="javascript:void(0)" onclick="goToPage(4)" class="nav-hidden">Methodology</a>
+            <a href="javascript:void(0)" onclick="goToPage(5)" class="nav-hidden">Factors</a>
+
+            <a href="javascript:void(0)" onclick="goToPage(6)">Walkability</a>
+            <a href="javascript:void(0)" onclick="goToPage(7)">Measure</a>
+            <a href="javascript:void(0)" onclick="goToPage(8)">Science</a>
+            <a href="javascript:void(0)" onclick="goToPage(9)">Other Cities</a>
+
+            <a href="javascript:void(0)" onclick="goToPage(10)" class="nav-map-btn">Map</a>
         </nav>
     </div>
 
@@ -816,43 +1210,61 @@
         </div>
     </div>
 </section>
-        <section class="page intro-page" data-index="1" id="background-page">
-            <div class="hero-box"> <h1>Background and motivation</h1>
-                <p>Latin American cities face deep inequalities in access to urban opportunities, particularly affecting low-income populations living in peripheral areas and relying heavily on walking for daily mobility. Although walking is one of the most widely used transport modes in the region (and the most inclusive, healthy, and sustainable) it remains largely overlooked in public policy. Cultural, institutional, and infrastructural barriers make pedestrian travel unsafe and unattractive, reinforcing social and spatial inequalities across cities. At the same time, research shows that the decision to walk is shaped not only by urban form at broader scales, but also by everyday street-level experiences such as sidewalk quality, safety, comfort, and individual perceptions. Despite recent advances in virtual audits and immersive technologies, there is still a lack of integrated tools that combine objective urban data with how people actually experience walking—especially in the Latin American context. This project addresses that gap by developing evidence-based, people-centered tools to support more walkable, equitable, and inclusive cities. </p>
-            </div>
-            <button id="learn-more-btn" data-open="false">Want to know more about this project?</button>
-        </section>
-        <section class="page intro-page hidden-page" data-index="2">
-            <h1>Objectives</h1>
+        <section class="page intro-page" data-index="1" id="challenge-page">
+            <div class="hero-box">
+                <h1>The Challenge: Walking is a Necessity, Not a Choice</h1>
 
-            <div class="columns-container">
+                <div class="intro-content">
+                    <div class="intro-text">
+                        <p>For millions of people in Latin American cities, walking isn't just a healthy habit. It is the only way to get to work, school, or the doctor. Unfortunately, those who rely on walking the most often live in neighborhoods with the worst conditions.</p>
+                        <p>Historically, pedestrian needs have not always been included in public policies with the importance they deserve, leaving many to face "invisible barriers" every day: broken sidewalks, lack of lighting, and a constant feeling of being unsafe. We know that the decision to walk isn't just about distance; it’s about how we experience the street. If a path feels dangerous or uncomfortable, it limits a person's access to the city’s opportunities, reinforcing social inequality.</p>
+                    </div>
+
+                    <div class="intro-image">
+                        <img src="images/foto1.png" alt="Sample Image">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="page intro-page" data-index="2" id="solution-page">
+            <div class="hero-box">
+                <h1>Our Solution: Putting People at the Heart of Urban Design </h1>
+
+                <div class="intro-content">
+                    <div class="intro-text">
+                        <p>To build better cities, we can’t just look at maps; we have to listen to the people walking them. Our project fills this gap by creating "people-centered" tools that combine hard urban data with real human stories. </p>
+                        <p>By using innovative technologies, like virtual reality and digital street audits, we capture how sidewalk quality and personal safety perceptions actually affect movement. Our goal is to provide city planners with evidence-based tools to transform our streets. We are working to ensure that walking becomes a safe, dignified, and inclusive right for everyone, regardless of which part of the city they call home. </p>
+                        
+                        <button id="learn-more-btn" data-open="false">Want to know more about this project?</button>
+                    </div>
+
+                    <div class="intro-image">
+                        <img src="images/C0POA.gif" alt="Sample Image">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="page objectives-page hidden-page" data-index="3" id="objectives-page">
+            <div class="hero-box">
+                <h1>Objectives</h1>
                 
-                <div class="column-left">
-                    <p>
-                        The primary aim of this project is to develop an assessment framework for walkability, encompassing both the mesoscale and microscale characteristics of the built environment, while considering individual perceptions through static experiments (traditional survey using text and images) and virtual reality experiences. To achieve this goal, we have established the following specific objectives:
-                    </p>
-                </div>
+                <div class="objectives-content">
+                    <div class="aim-section">
+                        <p>The primary aim of this project is to develop an assessment framework for walkability, encompassing both the mesoscale and microscale characteristics of the built environment, while considering individual perceptions through static experiments (traditional survey using text and images) and virtual reality experiences. To achieve this goal, we have established the following specific objectives:</p>
+                    </div>
 
-                <div class="column-right">
-                    <ol type="i">
-                        <li>
-                            Construct a walkability index that considers individual perceptions, using data from both the mesoscale and microscale characteristics of the built environment obtained from available sources, along with virtual audits using Google Street View. This index will be constructed for three Latin American cities located in different countries: Porto Alegre (Brazil), Barranquilla (Colombia) and Concepción (Chile).
-                        </li>
-                        <li>
-                            Map walkability in selected areas within these cities. The selection of these areas will be based on stratification variables, including motorization rate (MR - number of cars per household) or household income, average street slope, and the density of commercial establishments and services. Previous research suggests that these characteristics significantly impact walkability.
-                        </li>
-                        <li>
-                            Analyze whether there are differences in perceptions of urban features among different groups (socioeconomic status, gender, age) within cities and between the cities where the study is conducted, and how these differences affect the assessment of walkability.
-                        </li>
-                        <li>
-                            Compare the impact of perceptions of urban features when individuals participate in standardized virtual reality experiments conducted in all the studied cities. This will include an analysis of perception variations among groups and cities to determine whether these differences remain consistent or vary.
-                        </li>
-                    </ol>
+                    <div class="specific-objectives">
+                        <ol type="i">
+                            <li>Construct a walkability index that considers individual perceptions, using data from both the mesoscale and microscale characteristics of the built environment obtained from available sources, along with virtual audits using Google Street View. This index will be constructed for three Latin American cities located in different countries: Porto Alegre (Brazil), Barranquilla (Colombia) and Concepción (Chile).</li>
+                            <li>Map walkability in selected areas within these cities. The selection of these areas will be based on stratification variables, including motorization rate (MR - number of cars per household) or household income, average street slope, and the density of commercial establishments and services. Previous research suggests that these characteristics significantly impact walkability.</li>
+                            <li>Analyze whether there are differences in perceptions of urban features among different groups (socioeconomic status, gender, age) within cities and between the cities where the study is conducted, and how these differences affect the assessment of walkability.</li>
+                            <li>Compare the impact of perceptions of urban features when individuals participate in standardized virtual reality experiments conducted in all the studied cities. This will include an analysis of perception variations among groups and cities to determine whether these differences remain consistent or vary.</li>
+                        </ol>
+                    </div>
                 </div>
-
             </div>
         </section>
-        <section class="page intro-page hidden-page" id="methodology-page" data-index="3">
+        <section class="page intro-page hidden-page" id="methodology-page" data-index="4">
             <div class="hero-box">
                 <h1>Methodology</h1>
                 
@@ -871,7 +1283,7 @@
                 
             </div>
         </section>
-        <section class="page intro-page hidden-page" data-index="4">
+        <section class="page intro-page hidden-page" data-index="5">
             <h1>Factors and Components</h1>
             
             <div id="excel-viewer">
@@ -883,8 +1295,77 @@
                     </div>
             </div>
         </section>
+        <section class="page intro-page" data-index="6" id="walkability-page">
+            <div class="hero-box">
+                <h1>What makes a city walkable?</h1>
 
-        <section id="map-page" class="page" data-index="5">
+                <div class="intro-content">
+                    <div class="intro-text">
+                        <p>Walkability is more than just having sidewalks; it is the measure of how safely, easily, and comfortably a person can navigate their city on foot. In the Latin American context, however, this is often a matter of social justice. While walking is the most common way to move, deep spatial inequalities mean that low-income neighborhoods often face the harshest conditions, with fragmented infrastructure and limited access to urban opportunities compared to wealthier areas. </p>
+                    </div>
+
+                    <div class="intro-image">
+                        <img src="imagea/foto1.png" alt="Sample Image">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="page intro-page" data-index="7" id="measure-page">
+            <div class="hero-box">
+                <h1>How do we measure walkability? </h1>
+
+                <div class="intro-content">
+                    <div class="intro-text">
+                        <p>Measuring how "walkable" a street goes far beyond counting sidewalks or crosswalks. To truly understand the pedestrian experience in Latin American cities, we look at two sides of the same coin: what we see and what we feel. </p>
+                        <p>On one hand, we analyze the physical environment: the quality of pavement, the presence of trees, and the width of the streets. On the other, we capture the "unseen" factors: a person’s sense of safety, their comfort, and their personal perceptions of the path. By combining these hard facts with real human feelings, we create a complete picture of the urban journey. </p>
+                        <p>To achieve this, we measure street-level features using virtual audits (via Google Street View) and public datasets, allowing us to analyze every street segment with high precision using georeferenced information. </p>
+                        <p class="see-more">
+                            See more: <a href="https://doi.org/10.1080/01441647.2019.1703842" target="_blank">https://doi.org/10.1080/01441647.2019.1703842</a>
+                        </p>
+                    </div>
+
+                    <div class="intro-image">
+                        <img src="imagea/foto1.png" alt="Sample Image">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="page intro-page" data-index="8" id="science-page">
+            <div class="hero-box">
+                <h1>The Science Behind the Index: How is WalkUScan calculated? </h1>
+
+                <div class="intro-content">
+                    <div class="intro-text">
+                        <p>WalkUScan was built through perception surveys with residents of three distinct cities: Porto Alegre, Concepción, and Barranquilla. </p>
+                        <p>To understand what truly matters to locals, we asked participants to rank different street attributes and choose between simulated environments in Virtual Reality. </p>
+                        <p>With this data, we were able to assign a specific weight to each attribute, ensuring that the index reflects the actual priorities of those who live in these cities. </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="page intro-page" data-index="9" id="othercity-page">
+            <div class="hero-box">
+                <h1>Can this methodology be used in other cities?  </h1>
+
+                <div class="intro-content">
+                    <div class="intro-text">
+                        <p>Yes! We calculated the index for three different cities because we know that local reality shapes how people perceive their surroundings. If you want to assess walkability in your own city, you have two paths: </p>
+                        <ol class="toolkit-steps">
+                            <li>
+                                <strong>Use our Toolkit:</strong> You can choose the weights from the city that most closely resembles yours (Porto Alegre, Concepción, or Barranquilla) and simply input your local street-level data into our tool.
+                            </li>
+                            <li>
+                                <strong>Customize Your Index:</strong> We provide our perception survey as an open resource. You can apply it to your local community to calculate personalized weights, creating a walkability index that is 100% tailored to your city's unique cultural and urban context.
+                            </li>
+                        </ol>
+                        <a href="Null" style="text-decoration: none;">
+                            <button id="learn-more-btn">Download Toolkit</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="map-page" class="page" data-index="10">
 
             <button id="back-to-intro-btn" class="ui-hidden" title="Go Back">&larr; Go Back</button>
 
@@ -1076,14 +1557,14 @@
             const indoParaCima = scrollThreshold < 0;
 
             // --- LÓGICA ESPECIAL PARA A METODOLOGIA (INDEX 3) ---
-            if (index === 3) {
+            if (index === 4) {
                 const noUltimoPasso = (currentStep === totalSteps - 1);
                 const noPrimeiroPasso = (currentStep === 0);
 
                 // Se estiver no meio da animação (entre Step 1 e 6)
                 if ((indoParaBaixo && !noUltimoPasso) || (indoParaCima && !noPrimeiroPasso)) {
                     if (indoParaBaixo) updatePresentation(currentStep + 1);
-                    else goToPage(2);
+                    else goToPage(3);
                     
                     resetScrollLock();
                     return;
@@ -1091,16 +1572,16 @@
                 
                 // Se estiver nas bordas, troca de página
                 if (indoParaBaixo && noUltimoPasso) {
-                    goToPage(4);
+                    goToPage(5);
                 } else if (indoParaCima && noPrimeiroPasso) {
-                    goToPage(2);
+                    goToPage(3);
                 }
                 resetScrollLock();
             } 
             
             // --- NAVEGAÇÃO GLOBAL (OUTRAS PÁGINAS) ---
             else {
-                if (indoParaBaixo && index < 5) {
+                if (indoParaBaixo && index < 10) {
                     goToPage(getNextVisibleIndex(index, 1)); // Usa a função de pulo
                 } else if (indoParaCima && index > 0) {
                     goToPage(getNextVisibleIndex(index, -1)); // Usa a função de pulo
@@ -1123,11 +1604,8 @@
         document.addEventListener('click', function(e) {
             if (e.target && e.target.id === 'learn-more-btn') {
                 const btn = e.target;
-                const pages = document.querySelectorAll('.page[data-index="2"], .page[data-index="3"], .page[data-index="4"]');
-                
-                // Seleciona especificamente os links do menu que levam a essas páginas
-                // Estamos buscando pelos links que chamam goToPage(2), (3) ou (4)
-                const navButtons = document.querySelectorAll('#nav-menu a[onclick*="goToPage(2)"], #nav-menu a[onclick*="goToPage(3)"], #nav-menu a[onclick*="goToPage(4)"]');
+                const pages = document.querySelectorAll('.page[data-index="3"], .page[data-index="4"], .page[data-index="5"]');
+                const navButtons = document.querySelectorAll('#nav-menu a[onclick*="goToPage(3)"], #nav-menu a[onclick*="goToPage(4)"], #nav-menu a[onclick*="goToPage(5)"]');
                 
                 const isCurrentlyOpen = btn.getAttribute('data-open') === 'true';
 
@@ -1142,7 +1620,7 @@
                     btn.style.backgroundColor = "#4298fa";
                     btn.setAttribute('data-open', 'false');
 
-                    if (typeof goToPage === "function") goToPage(1);
+                    if (typeof goToPage === "function") goToPage(2);
                     window.scrollTo(0, 0);
 
                 } else {
@@ -1157,7 +1635,7 @@
                     btn.setAttribute('data-open', 'true');
 
                     setTimeout(() => {
-                        if (typeof goToPage === "function") goToPage(2);
+                        if (typeof goToPage === "function") goToPage(3);
                     }, 100);
                 }
             }
@@ -1173,12 +1651,12 @@
             let index = parseInt(activePage.getAttribute('data-index'));
 
             // --- LÓGICA ESPECIAL PARA A METODOLOGIA (PÁGINA 3) ---
-            if (index === 3) {
+            if (index === 4) {
                 if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
                     if (currentStep === 0) {
-                        if (typeof goToPage === "function") goToPage(2); // Volta para Objectives
+                        if (typeof goToPage === "function") goToPage(3); // Volta para Objectives
                     } else {
-                        if (typeof updatePresentation === "function") goToPage(2);
+                        if (typeof updatePresentation === "function") goToPage(3);
                     }
                     e.preventDefault();
                     return;
@@ -1186,7 +1664,7 @@
 
                 if (e.key === "ArrowRight" || e.key === "ArrowDown") {
                     if (currentStep === 5) { // Último slide da animação
-                        if (typeof goToPage === "function") goToPage(4); // Avança para Factors
+                        if (typeof goToPage === "function") goToPage(5); // Avança para Factors
                     } else {
                         if (typeof updatePresentation === "function") updatePresentation(currentStep + 1);
                     }
@@ -1198,7 +1676,7 @@
             // --- NAVEGAÇÃO NORMAL PARA AS OUTRAS PÁGINAS ---
             // Seta para Baixo ou Direita (Avançar)
             if (e.key === "ArrowDown" || e.key === "ArrowRight") {
-                if (index < 5) goToPage(getNextVisibleIndex(index, 1));
+                if (index < 10) goToPage(getNextVisibleIndex(index, 1));
             } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
                 if (index > 0) goToPage(getNextVisibleIndex(index, -1));
             }
@@ -1431,7 +1909,7 @@
 
                         // 1. LÓGICA DO TIMER (Página 3: Methodology)
                         // Liga o timer se entrar na página 3, desliga em qualquer outra
-                        if (pageIndex === 3) {
+                        if (pageIndex === 4) {
                             startTimer();
                         } else {
                             stopTimer();

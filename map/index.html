@@ -312,6 +312,9 @@
         function init() {
             // Inicializa o mapa focado na região das cidades do projeto
             map = L.map('map', { zoomControl: false }).setView([-30.03, -51.21], 13);
+            L.control.zoom({
+                position: 'bottomleft'
+            }).addTo(map);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
             // --- NOVO: CAMADA DE BAIRROS ---
