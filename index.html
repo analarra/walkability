@@ -202,7 +202,7 @@
 
         /* Coluna de Texto */
         .intro-text {
-            flex: 1.2; /* Ocupa um pouco mais de espaço que a imagem */
+            flex: 1; /* Ocupa um pouco mais de espaço que a imagem */
         }
 
         .intro-text p {
@@ -221,10 +221,78 @@
 
         .intro-image img {
             width: 100%;
-            max-width: 450px;    /* Limita o tamanho da foto */
+            max-width: 600px;    /* Limita o tamanho da foto */
             border-radius: 12px; /* Cantos arredondados para combinar com a hero-box */
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             object-fit: cover;
+        }
+
+        /* Container do vídeo */
+        .intro-video {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding-bottom: 25%; /* Mantém a proporção 16:9 se necessário */
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Estilo para a tag video ou iframe */
+        .intro-video video,
+        .intro-video iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            object-fit: cover; /* Faz o vídeo preencher o espaço sem distorcer */
+        }
+
+
+        .image-mosaic {
+            display: grid !important;
+            /* 'auto' faz a coluna ter o tamanho exato da imagem, sem esticar */
+            grid-template-columns: repeat(3, auto); 
+            gap: 0 !important; 
+            
+            /* A MÁGICA: O container só terá a largura necessária para as fotos */
+            width: fit-content !important; 
+            
+            /* Centraliza o mosaico inteiro dentro da hero-box */
+            margin: 30px auto 0 auto !important; 
+            
+            overflow: hidden;
+            border-radius: 8px;
+            background-color: transparent;
+        }
+
+        .image-mosaic img {
+            /* Defina aqui a largura fixa que você deseja (ex: 250px ou 300px) */
+            width: 280px !important; 
+            
+            height: auto !important; /* Altura flui conforme a foto */
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Efeito elegante: escurece as fotos e revela ao passar o mouse */
+        .image-mosaic img:hover {
+            filter: brightness(1.2);
+            cursor: pointer;
+        }
+
+        /* Responsividade: em celulares, o mosaico vira uma coluna única */
+        @media (max-width: 600px) {
+            .image-mosaic {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(6, auto);
+            }
         }
 
         /* Responsividade: em celulares, o texto fica em cima da imagem */
@@ -235,6 +303,62 @@
             .intro-image img {
                 max-width: 100%;
             }
+        }
+
+
+        /* Estilo do Fundo do Visualizador */
+        .image-viewer-modal {
+            display: none; /* Escondido por padrão */
+            position: fixed;
+            z-index: 3000; /* Fica acima do menu e do mapa */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9); /* Fundo preto quase opaco */
+            backdrop-filter: blur(5px); /* Efeito de desfoque no fundo */
+            cursor: zoom-out; /* Indica que clicar fecha */
+        }
+
+        /* A Imagem Ampliada */
+        .modal-content-img {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 85vh;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(255,255,255,0.1);
+            animation: zoomIn 0.3s ease; /* Efeito de abertura suave */
+        }
+
+        @keyframes zoomIn {
+            from { transform: translateY(-50%) scale(0.7); opacity: 0; }
+            to { transform: translateY(-50%) scale(1); opacity: 1; }
+        }
+
+        /* Botão de Fechar (X) */
+        .close-viewer {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 3001;
+        }
+
+        /* Melhora o cursor nas fotos do mosaico para avisar que é clicável */
+        .image-mosaic img {
+            cursor: zoom-in !important;
+        }
+
+        /* Classe que trava o scroll */
+        .stop-scrolling {
+            overflow-y: hidden !important;
         }
 
         /* Estilos para as páginas de introdução */
@@ -369,7 +493,7 @@
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            background-color: #4298fa; /* Cor inicial azul */
+            background-color: #0f610c; /* Cor inicial verde */
         }
 
         /* Efeito sutil ao passar o mouse */
@@ -820,6 +944,75 @@
             font-size: 1.4rem; /* Um pouco maior para preencher melhor o espaço de 80% */
         }
 
+        /* Container principal da seção técnica (Página 3) */
+        #measure-page .measure-section {
+            display: flex !important;  /* Ativa o Flexbox para alinhar mosaico e texto lado a lado */
+            align-items: flex-start; /* Alinha o topo dos dois blocos */
+            width: 100%;
+            margin-top: 30px;
+            gap: 40px;               /* Espaço entre o mosaico de fotos e o texto */
+        }
+
+        /* Mosaico de fotos à esquerda */
+        #measure-page .left-mosaic {
+            display: flex;
+            flex-direction: column; /* Empilha as duas imagens verticalmente */
+            flex: 0 0 400px;         /* Ocupa exatamente 400px de largura e não estica */
+            max-width: 400px;
+            gap: 15px;               /* Espaço entre as duas fotos */
+            overflow: hidden;
+            border-radius: 8px;      /* Opcional: arredonda os cantos do bloco de fotos */
+        }
+
+        /* Estilo para as duas imagens no mosaico */
+        #measure-page .left-mosaic img {
+            width: 100% !important;  /* Ocupa toda a largura do contêiner do mosaico */
+            height: 250px;           /* Defina uma altura fixa para as fotos ficarem iguais */
+            object-fit: cover;       /* Garante que a imagem preencha o quadrado sem distorcer */
+            display: block;          /* Remove espaços indesejados abaixo da imagem */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Texto à direita */
+        #measure-page .right-text {
+            flex: 1;                 /* Ocupa todo o resto do espaço disponível */
+            text-align: left;
+            color: #444;
+        }
+
+        /* Responsividade: em celulares, empilha o mosaico e o texto verticalmente */
+        @media (max-width: 900px) {
+            #measure-page .measure-section {
+                flex-direction: column; /* Empilha verticalmente em telas menores */
+            }
+            
+            #measure-page .left-mosaic {
+                flex: 1 1 100%;       /* Ocupa toda a largura disponível */
+                max-width: 100%;
+                flex-direction: row;  /* Em telas médias, coloca as fotos lado a lado */
+                flex-wrap: wrap;      /* Permite quebrar linha se ficarem muito estreitas */
+                gap: 10px;
+            }
+            
+            #measure-page .left-mosaic img {
+                width: calc(50% - 5px) !important; /* Em telas médias, 2 fotos lado a lado */
+                height: 200px;
+            }
+        }
+
+        /* Responsividade adicional para celulares pequenos: fotos uma embaixo da outra */
+        @media (max-width: 600px) {
+            #measure-page .left-mosaic {
+                flex-direction: column; /* Em celulares pequenos, fotos uma embaixo da outra */
+            }
+            
+            #measure-page .left-mosaic img {
+                width: 100% !important; /* Ocupa toda a largura */
+                height: auto;           /* Altura flui conforme a foto */
+            }
+        }
+
         #science-page {
             /* Adiciona a imagem de fundo com um leve escurecimento para dar profundidade */
             background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
@@ -957,17 +1150,36 @@
             overflow: hidden !important;
         }
 
-        /* Garante que o botão nunca suma */
-        #learn-more-btn {
-            display: inline-block !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-            position: relative;
-            z-index: 999;
+        /* Adicione o novo ID separado por vírgula para compartilhar o estilo */
+        #learn-more-btn, #download-btn {
+            transition: all 0.3s ease;
+            margin-top: 25px;
+            padding: 12px 24px;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background-color: #0f610c; /* Cor inicial verde */
         }
 
-        #learn-more-btn:hover {
-            background-color: #357abd;
+        /* Estilo para o novo botão de voltar (pode ser igual ao anterior) */
+        #show-less-btn {
+            margin-top: 20px;
+            padding: 12px 24px;
+            background-color: #666;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        #show-less-btn:hover {
+            background-color: #444;
             transform: translateY(-2px);
         }
 
@@ -1217,7 +1429,7 @@
                 <div class="intro-content">
                     <div class="intro-text">
                         <p>For millions of people in Latin American cities, walking isn't just a healthy habit. It is the only way to get to work, school, or the doctor. Unfortunately, those who rely on walking the most often live in neighborhoods with the worst conditions.</p>
-                        <p>Historically, pedestrian needs have not always been included in public policies with the importance they deserve, leaving many to face "invisible barriers" every day: broken sidewalks, lack of lighting, and a constant feeling of being unsafe. We know that the decision to walk isn't just about distance; it’s about how we experience the street. If a path feels dangerous or uncomfortable, it limits a person's access to the city’s opportunities, reinforcing social inequality.</p>
+                        <p>Historically, pedestrian needs have not always been included in public policies with the importance they deserve, leaving many to face "invisible barriers" every day: broken sidewalks, lack of lighting, and a constant feeling of being unsafe. We know that the decision to walk isn't just about distance; it’s about how we <strong>experience</strong> the street. If a path feels dangerous or uncomfortable, it limits a person's access to the city’s opportunities, reinforcing social inequality.</p>
                     </div>
 
                     <div class="intro-image">
@@ -1231,17 +1443,22 @@
                 <h1>Our Solution: Putting People at the Heart of Urban Design </h1>
 
                 <div class="intro-content">
+                    <div class="intro-video">
+                        <video autoplay loop muted playsinline>
+                            <source src="images/C9 POA_2.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+
                     <div class="intro-text">
                         <p>To build better cities, we can’t just look at maps; we have to listen to the people walking them. Our project fills this gap by creating "people-centered" tools that combine hard urban data with real human stories. </p>
                         <p>By using innovative technologies, like virtual reality and digital street audits, we capture how sidewalk quality and personal safety perceptions actually affect movement. Our goal is to provide city planners with evidence-based tools to transform our streets. We are working to ensure that walking becomes a safe, dignified, and inclusive right for everyone, regardless of which part of the city they call home. </p>
                         
-                        <button id="learn-more-btn" data-open="false">Want to know more about this project?</button>
-                    </div>
-
-                    <div class="intro-image">
-                        <img src="images/C0POA.gif" alt="Sample Image">
+                        
                     </div>
                 </div>
+
+                <button id="learn-more-btn" data-open="false">Want to know more about this project?</button>
             </div>
         </section>
         <section class="page objectives-page hidden-page" data-index="3" id="objectives-page">
@@ -1294,6 +1511,7 @@
                 <div id="table-container">
                     </div>
             </div>
+            <button id="show-less-btn">Show less about the project</button>
         </section>
         <section class="page intro-page" data-index="6" id="walkability-page">
             <div class="hero-box">
@@ -1301,12 +1519,17 @@
 
                 <div class="intro-content">
                     <div class="intro-text">
-                        <p>Walkability is more than just having sidewalks; it is the measure of how safely, easily, and comfortably a person can navigate their city on foot. In the Latin American context, however, this is often a matter of social justice. While walking is the most common way to move, deep spatial inequalities mean that low-income neighborhoods often face the harshest conditions, with fragmented infrastructure and limited access to urban opportunities compared to wealthier areas. </p>
+                        <p>Walkability is more than just having sidewalks; it is the measure of how safely, easily, and comfortably a person can navigate their city on foot. In the Latin American context, however, this is often a matter of <strong>social justice.</strong> While walking is the most common way to move, deep spatial inequalities mean that low-income neighborhoods often face the harshest conditions, with fragmented infrastructure and limited access to urban opportunities compared to wealthier areas. </p>
                     </div>
+                </div>
 
-                    <div class="intro-image">
-                        <img src="imagea/foto1.png" alt="Sample Image">
-                    </div>
+                <div class="image-mosaic">
+                    <img src="streetview/Untitled02.png" alt="Amostra 1">
+                    <img src="streetview/Untitled04.png" alt="Amostra 2">
+                    <img src="streetview/Untitled06.png" alt="Amostra 3">
+                    <img src="streetview/Untitled08.png" alt="Amostra 4">
+                    <img src="streetview/Untitled10.png" alt="Amostra 5">
+                    <img src="streetview/Untitled12.png" alt="Amostra 6">
                 </div>
             </div>
         </section>
@@ -1314,18 +1537,20 @@
             <div class="hero-box">
                 <h1>How do we measure walkability? </h1>
 
-                <div class="intro-content">
-                    <div class="intro-text">
-                        <p>Measuring how "walkable" a street goes far beyond counting sidewalks or crosswalks. To truly understand the pedestrian experience in Latin American cities, we look at two sides of the same coin: what we see and what we feel. </p>
+                <div class="measure-section">
+
+                    <div class="left-mosaic">
+                        <img src="images/C5.jpg" alt="Imagem 1">
+                        <img src="images/C6.jpg" alt="Imagem 2">
+                    </div>
+
+                    <div class="right-text">
+                        <p>Measuring how "walkable" a street goes far beyond counting sidewalks or crosswalks. To truly understand the pedestrian experience in Latin American cities, we look at two sides of the same coin: <strong>what we see</strong> and <strong>what we feel.</strong> </p>
                         <p>On one hand, we analyze the physical environment: the quality of pavement, the presence of trees, and the width of the streets. On the other, we capture the "unseen" factors: a person’s sense of safety, their comfort, and their personal perceptions of the path. By combining these hard facts with real human feelings, we create a complete picture of the urban journey. </p>
-                        <p>To achieve this, we measure street-level features using virtual audits (via Google Street View) and public datasets, allowing us to analyze every street segment with high precision using georeferenced information. </p>
+                        <p>To achieve this, we measure street-level features using <strong>virtual audits</strong> (via Google Street View) and <strong>public datasets</strong>, allowing us to analyze every street segment with high precision using georeferenced information. </p>
                         <p class="see-more">
                             See more: <a href="https://doi.org/10.1080/01441647.2019.1703842" target="_blank">https://doi.org/10.1080/01441647.2019.1703842</a>
                         </p>
-                    </div>
-
-                    <div class="intro-image">
-                        <img src="imagea/foto1.png" alt="Sample Image">
                     </div>
                 </div>
             </div>
@@ -1336,7 +1561,7 @@
 
                 <div class="intro-content">
                     <div class="intro-text">
-                        <p>WalkUScan was built through perception surveys with residents of three distinct cities: Porto Alegre, Concepción, and Barranquilla. </p>
+                        <p>WalkUScan was built through <strong>perception surveys</strong> with residents of three distinct cities: <strong>Porto Alegre, Concepción, and Barranquilla.</strong> </p>
                         <p>To understand what truly matters to locals, we asked participants to rank different street attributes and choose between simulated environments in Virtual Reality. </p>
                         <p>With this data, we were able to assign a specific weight to each attribute, ensuring that the index reflects the actual priorities of those who live in these cities. </p>
                     </div>
@@ -1358,8 +1583,8 @@
                                 <strong>Customize Your Index:</strong> We provide our perception survey as an open resource. You can apply it to your local community to calculate personalized weights, creating a walkability index that is 100% tailored to your city's unique cultural and urban context.
                             </li>
                         </ol>
-                        <a href="Null" style="text-decoration: none;">
-                            <button id="learn-more-btn">Download Toolkit</button>
+                        <a href="null" style="text-decoration: none;">
+                            <button id="download-btn">Download Toolkit</button>
                         </a>
                     </div>
                 </div>
@@ -1480,13 +1705,16 @@
             const pages = document.querySelectorAll('.page');
             let next = currentIndex + direction;
 
-            // Percorre as páginas na direção desejada até achar uma que NÃO esteja escondida
-            while (pages[next] && pages[next].classList.contains('hidden-page')) {
+            // Enquanto a próxima página existir E estiver escondida, continua procurando
+            while (next >= 0 && next < pages.length && pages[next].classList.contains('hidden-page')) {
                 next += direction;
             }
 
-            // Garante que o índice retornado esteja dentro dos limites (0 a 5)
-            return Math.max(0, Math.min(pages.length - 1, next));
+            // Se ele tentar sair do limite (ex: ir além da 5 no modo técnico)
+            // ele deve parar na página atual, e não pular para a 2 ou 6
+            if (next < 0 || next >= pages.length) return currentIndex;
+
+            return next;
         }
 
         let currentStep = 0;
@@ -1536,9 +1764,16 @@
         }
 
         let isScrolling = false;
+        let isModalOpen = false; // Começa como falso
         let scrollThreshold = 0; // Acumulador de força do scroll
 
         window.addEventListener('wheel', (e) => {
+
+            if (isModalOpen) {
+                e.preventDefault(); // Impede qualquer movimento
+                return; 
+            }
+
             const activePage = document.querySelector('.page.active');
             if (!activePage) return;
 
@@ -1548,6 +1783,11 @@
 
             const index = parseInt(activePage.getAttribute('data-index'));
             scrollThreshold += e.deltaY; // Soma a força do movimento atual
+
+            if (index==10) {
+                e.preventDefault(); // Impede qualquer movimento
+                return; 
+            }
 
             // Sensibilidade: 50 é um valor equilibrado. 
             // Aumente para 100 se quiser que o scroll seja "mais pesado".
@@ -1602,53 +1842,97 @@
 
         // Usamos o document para que o evento nunca se perca
         document.addEventListener('click', function(e) {
+            const technicalIndices = [3, 4, 5]; // Índices das páginas técnicas
+            const allLinks = document.querySelectorAll('#nav-menu a');
+            const allPages = document.querySelectorAll('.page');
+
+            // 1. AÇÃO: SHOW MORE (Entrar no modo técnico)
             if (e.target && e.target.id === 'learn-more-btn') {
-                const btn = e.target;
-                const pages = document.querySelectorAll('.page[data-index="3"], .page[data-index="4"], .page[data-index="5"]');
-                const navButtons = document.querySelectorAll('#nav-menu a[onclick*="goToPage(3)"], #nav-menu a[onclick*="goToPage(4)"], #nav-menu a[onclick*="goToPage(5)"]');
+                console.log("Ativando Modo Técnico...");
+
+                // Gerencia visibilidade das PÁGINAS
+                allPages.forEach(p => {
+                    const idx = parseInt(p.getAttribute('data-index'));
+                    if (technicalIndices.includes(idx)) {
+                        p.classList.remove('hidden-page');
+                    } else {
+                        p.classList.add('hidden-page');
+                    }
+                });
+
+                // Gerencia visibilidade do MENU (Resolve o problema da imagem)
+                allLinks.forEach(link => {
+                    const onclickText = link.getAttribute('onclick') || "";
+                    // Verifica se o link aponta para 3, 4 ou 5
+                    const isTechnical = technicalIndices.some(idx => onclickText.includes(`goToPage(${idx})`));
+                    
+                    if (isTechnical) {
+                        link.classList.remove('nav-hidden');
+                    } else {
+                        link.classList.add('nav-hidden');
+                    }
+                });
+
+                const container = document.getElementById('main-container');
+                if (container) container.scrollTop = 0;
                 
-                const isCurrentlyOpen = btn.getAttribute('data-open') === 'true';
+                setTimeout(() => goToPage(3), 50);
+            }
 
-                if (isCurrentlyOpen) {
-                    // --- AÇÃO: ESCONDER TUDO ---
-                    pages.forEach(p => p.classList.add('hidden-page'));
-                    
-                    // Esconde também os botões do menu
-                    navButtons.forEach(navBtn => navBtn.classList.add('nav-hidden'));
-                    
-                    btn.innerText = "Want to know more about this project?";
-                    btn.style.backgroundColor = "#4298fa";
-                    btn.setAttribute('data-open', 'false');
+            // 2. AÇÃO: SHOW LESS (Voltar ao modo normal)
+            if (e.target && e.target.id === 'show-less-btn') {
+                console.log("Restaurando Modo Geral...");
 
-                    if (typeof goToPage === "function") goToPage(2);
-                    window.scrollTo(0, 0);
+                // Restaura visibilidade das PÁGINAS
+                allPages.forEach(p => {
+                    const idx = parseInt(p.getAttribute('data-index'));
+                    if (technicalIndices.includes(idx)) {
+                        p.classList.add('hidden-page');
+                    } else {
+                        p.classList.remove('hidden-page');
+                    }
+                });
 
-                } else {
-                    // --- AÇÃO: MOSTRAR TUDO ---
-                    pages.forEach(p => p.classList.remove('hidden-page'));
+                // Restaura visibilidade do MENU
+                allLinks.forEach(link => {
+                    const onclickText = link.getAttribute('onclick') || "";
+                    const isTechnical = technicalIndices.some(idx => onclickText.includes(`goToPage(${idx})`));
                     
-                    // Mostra os botões do menu novamente
-                    navButtons.forEach(navBtn => navBtn.classList.remove('nav-hidden'));
-                    
-                    btn.innerText = "Show less about the project";
-                    btn.style.backgroundColor = "#666";
-                    btn.setAttribute('data-open', 'true');
+                    if (isTechnical) {
+                        link.classList.add('nav-hidden');
+                    } else {
+                        link.classList.remove('nav-hidden');
+                    }
+                });
 
-                    setTimeout(() => {
-                        if (typeof goToPage === "function") goToPage(3);
-                    }, 100);
-                }
+                setTimeout(() => goToPage(2), 50);
             }
         });
 
 
         document.addEventListener('keydown', (e) => {
+
+            if (isModalOpen) {
+                e.preventDefault(); // Impede qualquer movimento
+                return; 
+            }
+
+            if (isModalOpen) {
+                e.preventDefault(); // Impede qualquer movimento
+                return; 
+            }
+
             // 1. Localiza a página que tem a classe 'active' no momento
             const activePage = document.querySelector('.page.active');
             if (!activePage) return;
 
             // 2. Transforma o data-index em um número inteiro
             let index = parseInt(activePage.getAttribute('data-index'));
+
+            if (index==10) {
+                e.preventDefault(); // Impede qualquer movimento
+                return; 
+            }
 
             // --- LÓGICA ESPECIAL PARA A METODOLOGIA (PÁGINA 3) ---
             if (index === 4) {
@@ -1700,6 +1984,50 @@
                 progressInterval = null; // Limpa a referência
             }
         }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById("image-modal");
+            const modalImg = document.getElementById("full-res-image");
+            const mainContainer = document.getElementById("main-container"); // Referência ao container do site
+
+            const mosaicImages = document.querySelectorAll('.image-mosaic img');
+
+            mosaicImages.forEach(img => {
+            img.onclick = function() {
+                modal.style.display = "block";
+                modalImg.src = this.src;
+                
+                isModalOpen = true; // <--- TRAVA ATIVADA
+                mainContainer.classList.add('stop-scrolling'); // Trava o scroll visual
+            }
+        });
+
+            // Função para fechar e destravar
+            function closeModal() {
+                modal.style.display = "none";
+    
+                isModalOpen = false; // <--- TRAVA DESATIVADA
+                mainContainer.classList.remove('stop-scrolling'); // Destrava o visual
+            }
+
+            // Fecha ao clicar no X
+            document.querySelector(".close-viewer").onclick = closeModal;
+
+            // Fecha ao clicar no fundo
+            modal.onclick = function(e) {
+                if (e.target === modal || e.target === modalImg) {
+                    closeModal();
+                }
+            }
+            
+            // BÔNUS: Fecha ao apertar a tecla 'ESC'
+            document.addEventListener('keydown', function(e) {
+                if (e.key === "Escape" && modal.style.display === "block") {
+                    closeModal();
+                }
+            });
+        });
 
         // --- DICIONÁRIOS DE DADOS ---
         // (Seus objetos attributeMap, attributeDescriptions e invertedAttributes permanecem aqui, sem alterações)
@@ -1985,5 +2313,11 @@
 
 
     </script>
+
+    <div id="image-modal" class="image-viewer-modal">
+        <span class="close-viewer">&times;</span>
+        <img class="modal-content-img" id="full-res-image">
+        <div id="caption-text"></div>
+    </div>
 </body>
 </html>
