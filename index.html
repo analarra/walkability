@@ -1029,6 +1029,24 @@
             align-items: center !important;
         }
 
+        /* 1. Remove fundo, sombra e borda do CONTAINER da imagem */
+        #science-page .intro-image {
+            background: none !important;
+            box-shadow: none !important;
+            border: none !important;
+            padding: 0 !important; /* Remove qualquer respiro interno */
+        }
+
+        /* 2. Remove sombra e cantos arredondados da IMAGEM em si */
+        #science-page .intro-image img {
+            width: 100%;
+            max-width: 450px;       /* Ajuste a largura como preferir aqui */
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            border: none !important;
+            object-fit: contain;   /* Garante que o mapa não seja cortado */
+        }
+
         #science-page h1 {
             font-size: 3rem; /* Ajuste este valor (ex: 40px, 3rem, etc.) */
             line-height: 1.2;  /* Ajusta o espaçamento entre as linhas do título */
@@ -1287,6 +1305,7 @@
         }
 
         #methodology-page .hero-box {
+            background: #fefefe;
             /* 1. Removemos os limites de tamanho padrão apenas aqui */
             max-width: none !important; 
             width: auto !important;
@@ -1335,6 +1354,20 @@
 
         #methodology-page .methodology-slide.active {
             opacity: 1;
+        }
+
+        #methodology-page .methodology-video-container {
+            width: 100%;
+            max-width: 1000px; /* Ajuste conforme o tamanho do seu vídeo */
+            margin-top: 20px;
+            border-radius: 0px;
+            overflow: hidden;
+        }
+
+        #methodology-page video {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
         .timer-container {
@@ -1485,19 +1518,12 @@
             <div class="hero-box">
                 <h1>Methodology</h1>
                 
-                <div id="methodology-slider">
-                    <img src="images/MethodVREF/anim1.SVG" class="methodology-slide active" alt="Step 1">
-                    <img src="images/MethodVREF/anim2.SVG" class="methodology-slide" alt="Step 2">
-                    <img src="images/MethodVREF/anim3.SVG" class="methodology-slide" alt="Step 3">
-                    <img src="images/MethodVREF/anim4.SVG" class="methodology-slide" alt="Step 4">
-                    <img src="images/MethodVREF/anim5.SVG" class="methodology-slide" alt="Step 5">
-                    <img src="images/MethodVREF/anim6.SVG" class="methodology-slide" alt="Step 6">
-                </div>
-
-                <div class="timer-container">
-                    <div id="timer-bar"></div>
-                </div>
-                
+                <div class="methodology-video-container">
+                    <video id="stop-video" loop muted playsinline>
+                        <source src="images/MethodVREF.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>                
             </div>
         </section>
         <section class="page intro-page hidden-page" data-index="5">
@@ -1560,6 +1586,11 @@
                 <h1>The Science Behind the Index: How is WalkUScan calculated? </h1>
 
                 <div class="intro-content">
+
+                    <div class="intro-image">
+                        <img src="images/mapacidades.png" alt="Sample Image">
+                    </div>
+
                     <div class="intro-text">
                         <p>WalkUScan was built through <strong>perception surveys</strong> with residents of three distinct cities: <strong>Porto Alegre, Concepción, and Barranquilla.</strong> </p>
                         <p>To understand what truly matters to locals, we asked participants to rank different street attributes and choose between simulated environments in Virtual Reality. </p>
@@ -1795,39 +1826,14 @@
 
             const indoParaBaixo = scrollThreshold > 0;
             const indoParaCima = scrollThreshold < 0;
-
-            // --- LÓGICA ESPECIAL PARA A METODOLOGIA (INDEX 3) ---
-            if (index === 4) {
-                const noUltimoPasso = (currentStep === totalSteps - 1);
-                const noPrimeiroPasso = (currentStep === 0);
-
-                // Se estiver no meio da animação (entre Step 1 e 6)
-                if ((indoParaBaixo && !noUltimoPasso) || (indoParaCima && !noPrimeiroPasso)) {
-                    if (indoParaBaixo) updatePresentation(currentStep + 1);
-                    else goToPage(3);
-                    
-                    resetScrollLock();
-                    return;
-                }
-                
-                // Se estiver nas bordas, troca de página
-                if (indoParaBaixo && noUltimoPasso) {
-                    goToPage(5);
-                } else if (indoParaCima && noPrimeiroPasso) {
-                    goToPage(3);
-                }
-                resetScrollLock();
-            } 
             
             // --- NAVEGAÇÃO GLOBAL (OUTRAS PÁGINAS) ---
-            else {
-                if (indoParaBaixo && index < 10) {
-                    goToPage(getNextVisibleIndex(index, 1)); // Usa a função de pulo
-                } else if (indoParaCima && index > 0) {
-                    goToPage(getNextVisibleIndex(index, -1)); // Usa a função de pulo
-                }
-                resetScrollLock();
+            if (indoParaBaixo && index < 10) {
+                goToPage(getNextVisibleIndex(index, 1)); // Usa a função de pulo
+            } else if (indoParaCima && index > 0) {
+                goToPage(getNextVisibleIndex(index, -1)); // Usa a função de pulo
             }
+            resetScrollLock();
         }, { passive: false });
 
         function resetScrollLock() {
@@ -1917,11 +1923,6 @@
                 return; 
             }
 
-            if (isModalOpen) {
-                e.preventDefault(); // Impede qualquer movimento
-                return; 
-            }
-
             // 1. Localiza a página que tem a classe 'active' no momento
             const activePage = document.querySelector('.page.active');
             if (!activePage) return;
@@ -1933,29 +1934,6 @@
                 e.preventDefault(); // Impede qualquer movimento
                 return; 
             }
-
-            // --- LÓGICA ESPECIAL PARA A METODOLOGIA (PÁGINA 3) ---
-            if (index === 4) {
-                if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-                    if (currentStep === 0) {
-                        if (typeof goToPage === "function") goToPage(3); // Volta para Objectives
-                    } else {
-                        if (typeof updatePresentation === "function") goToPage(3);
-                    }
-                    e.preventDefault();
-                    return;
-                }
-
-                if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-                    if (currentStep === 5) { // Último slide da animação
-                        if (typeof goToPage === "function") goToPage(5); // Avança para Factors
-                    } else {
-                        if (typeof updatePresentation === "function") updatePresentation(currentStep + 1);
-                    }
-                    e.preventDefault();
-                    return;
-                }
-            } 
 
             // --- NAVEGAÇÃO NORMAL PARA AS OUTRAS PÁGINAS ---
             // Seta para Baixo ou Direita (Avançar)
@@ -2228,19 +2206,19 @@
                 });
             }
 
+            
+            const stopVideo = document.getElementById('stop-video');
+            
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     const scrollIndicator = document.getElementById('scroll-indicator');
 
-                    if (entry.isIntersecting) {
-                        const pageIndex = parseInt(entry.target.dataset.index);
+                    const pageIndex = parseInt(entry.target.dataset.index);
 
-                        // 1. LÓGICA DO TIMER (Página 3: Methodology)
-                        // Liga o timer se entrar na página 3, desliga em qualquer outra
-                        if (pageIndex === 4) {
-                            startTimer();
-                        } else {
-                            stopTimer();
+                    if (entry.isIntersecting) {
+
+                        if (pageIndex === 4 && stopVideo) {
+                            stopVideo.play();
                         }
 
                         // 2. INDICADOR DE SCROLL
@@ -2267,6 +2245,13 @@
                             mapUiElements.forEach(el => el.classList.add('ui-hidden'));
                             if (legendControl) map.removeControl(legendControl);
                         }
+                    }else {
+                        // SE SAIU DA PÁGINA 4 -> PAUSE
+                        if (pageIndex === 4 && stopVideo) {
+                            stopVideo.pause();
+                            // Opcional: stopVideo.currentTime = 0; // Volta para o início se quiser
+                        }
+
                     }
                 });
             }, { threshold: 0.6 });
