@@ -549,18 +549,31 @@
         #info-box-toggle:hover { background-color: #f7f7f7; }
         #info-box-content { font-size: 12px; margin: 0; line-height: 1.5; color: #555; }
 
-        /* Estilos para o visualizador de Excel */
+        /* Seleciona a seção da página 5 para centralizar a hero-box */
+        section[data-index="5"] {
+            display: flex !important;
+            justify-content: center !important; /* Centraliza horizontalmente */
+            align-items: center !important;     /* Centraliza verticalmente */
+        }
+        
+        
         #excel-viewer {
             background-color: #ffffff;
             color: #333;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            width: 100%;      /* <--- MUDANÇA: Ocupa toda a largura disponível */
-            /* A linha max-width foi removida */
-            height: 75vh;     /* <--- MUDANÇA: Altura aumentada para 85% da tela */
+            
+            /* ALTERAÇÕES AQUI */
+            width: 90%;               /* Em vez de 100%, para ter respiro nas laterais */
+            max-width: 2000px;        /* Limite para telas muito grandes */
+            height: 70vh;             /* Altura equilibrada */
+            margin-top: 100px;           /* Reforço de centralização */
+            align-items: center;      /* CENTRALIZA o H1 e os Controls horizontalmente */
+            
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            padding-top: 20px;        /* Espaço interno no topo */
         }
 
         /* Container específico para a tabela dentro do visualizador */
@@ -580,14 +593,25 @@
             border-collapse: collapse;
         }
 
+        /* Centraliza o título */
+        #excel-viewer h1 {
+            text-align: center;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        /* Centraliza o Label e o Select */
         .excel-controls {
             padding: 10px 15px;
             background-color: #f7f7f7;
             border-bottom: 1px solid #ddd;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center; /* ADICIONADO: Centraliza o conteúdo horizontalmente */
+            gap: 15px;
+            width: 100%;             /* Ocupa a largura da caixa para poder centralizar */
         }
+
         .excel-controls label {
             font-weight: bold;
         }
@@ -681,39 +705,109 @@
         }
 
         #hero-page {
-            /* Imagem de fundo baseada em urbanismo/pedestres */
-            /* Mantemos o gradiente para garantir que o texto da caixa branca tenha contraste com o fundo */
+            /* Garante que o MAPA apareça no fundo da seção */
             background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
-                            url('images/background.png'); /* <-- Caminho para sua pasta local */
+                            url('images/background.png'); /* Certifique-se de que o caminho está correto */
             background-size: cover;
             background-position: center;
+            background-repeat: no-repeat;
             
-            /* Força o conteúdo a ficar no centro (anulando o flex-start anterior) */
+            display: flex !important;
             justify-content: center !important;
             align-items: center !important;
-            text-align: center !important;
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* Ajuste específico da Caixa Branca na Página 1 */
+        #hero-page .hero-box {
+            /* Restaura o fundo branco e a sombra */
+            background: rgba(255, 255, 255, 0.95) !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
+            border-radius: 15px !important;
+            
+            /* Na hero, a caixa deve ser menor e centralizada, não 80vh */
+            width: 65% !important;   /* Ajuste conforme o gosto (Imagem 1 parece 65%) */
+            height: auto !important;  /* Deixa a altura livre para o conteúdo */
+            max-height: 80vh !important;
+            padding: 40px !important;
+            
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+        }
+
+        /* Ajuste do conteúdo interno da hero */
+        #hero-page .content-wrapper {
+            width: 100% !important; /* Faz o conteúdo usar a largura da caixa branca */
+            max-width: 2000px;
+        }
+
+        /* Cores do texto dentro da caixa branca na hero */
+        #hero-page h1 {
+            color: #333 !important;
+            font-size: 1.8rem !important; /* Tamanho da Imagem 1 */
+            margin-bottom: 20px !important;
+        }
+
+        #hero-page p {
+            text-align: center !important; /* Força o alinhamento central do texto */
+            width: 100% !important;        /* Garante que o texto use toda a largura da caixa */
+            display: block !important;
+            
+            /* Controla a largura máxima para que a quebra de linha 
+            fique elegante (ajuste conforme necessário) */
+            max-width: 800px !important; 
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        #hero-page .partner-logos img {
+            filter: grayscale(100%); /* Se quiser os logos cinzas como na Imagem 1 */
+            opacity: 0.7;
+            height: 40px;
         }
 
         .hero-box {
             background: rgba(255, 255, 255, 0.95); /* Branco com leve transparência */
-            padding: 50px;
+            padding: 20px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             max-width: 1200px;
             width: 90%;
+
+            /* MUDANÇAS ESSENCIAIS: */
+            height: 90vh !important;       /* Define uma altura para a caixa não "esticar" */
+            max-width: 1200px;
+            display: flex !important;      /* Necessário para centralizar o wrapper */
+            justify-content: center !important;
+            align-items: center !important;
+            overflow: hidden !important;   /* Trava o conteúdo dentro dos limites */
+            position: relative;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 1300px;                /* Sua largura de referência para o design */
+            transform-origin: center center;
+            flex-shrink: 0;               /* Impede que o flexbox esmague o wrapper */
+            transition: transform 0.2s ease-out;
         }
 
         .hero-box h1 {
             color: #222;
             font-size: 3.5rem;
-            margin-bottom: 20px;
+            margin-bottom: 1rem;
             text-shadow: none; /* Remove sombra para legibilidade no branco */
         }
 
         .hero-box p {
             color: #555;
             font-size: 2.2rem;
-            margin: 0 auto 40px auto;
+            margin: 0 auto auto auto;
             max-width: 100%;
         }
 
@@ -790,7 +884,7 @@
             
             /* Garante que o texto seja rolável se a janela for pequena */
             overflow-y: auto; 
-            padding: 60px !important;
+            padding: 20px 60px 60px !important;
         }
 
         #challenge-page .hero-box p {
@@ -799,6 +893,7 @@
             margin: 0 auto;
             font-size: 1.55rem; /* Um pouco maior para preencher melhor o espaço de 80% */
         }
+
 
         #solution-page {
             /* Adiciona a imagem de fundo com um leve escurecimento para dar profundidade */
@@ -838,7 +933,7 @@
             
             /* Garante que o texto seja rolável se a janela for pequena */
             overflow-y: auto; 
-            padding: 60px !important;
+            padding: 20px 60px 60px !important;
         }
 
         #solution-page .hero-box p {
@@ -886,7 +981,7 @@
             
             /* Garante que o texto seja rolável se a janela for pequena */
             overflow-y: auto; 
-            padding: 60px !important;
+            padding: 20px 60px 60px !important;
         }
 
         #walkability-page .hero-box p {
@@ -934,7 +1029,7 @@
             
             /* Garante que o texto seja rolável se a janela for pequena */
             overflow-y: auto; 
-            padding: 60px !important;
+            padding: 20px 60px 60px !important;
         }
 
         #measure-page .hero-box p {
@@ -1069,7 +1164,7 @@
             
             /* Garante que o texto seja rolável se a janela for pequena */
             overflow-y: auto; 
-            padding: 60px !important;
+            padding: 20px 60px 60px !important;
         }
 
         #science-page .hero-box p {
@@ -1117,7 +1212,7 @@
             
             /* Garante que o texto seja rolável se a janela for pequena */
             overflow-y: auto; 
-            padding: 60px !important;
+            padding: 20px 60px 60px !important;
         }
 
         #othercity-page .hero-box p {
@@ -1222,8 +1317,8 @@
 
         #objectives-page .hero-box {
             width: 85%;      /* Largura da caixa */
-            max-width: 1100px; 
-            padding: 40px;
+            max-width: 1300px; 
+            padding: 20px 60px 60px !important;
             text-align: left; /* Alinhamento do texto interno */
         }
 
@@ -1320,7 +1415,7 @@
             margin-right: 4vw !important;   /* Margem Direita */
 
             /* 3. Espaço interno e alinhamento */
-            padding: 40px !important;
+            padding: 20px 60px 60px !important;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -1439,97 +1534,110 @@
     <div id="main-container">
         <section class="page active" id="hero-page" data-index="0">
     <div class="hero-box">
-        <div class="main-logo-wrapper">
-            <img src="images/WALKC.png" alt="WalkUScan Logo" class="hero-logo-img">
-            <h1 class="visually-hidden">WalkUScan</h1>
-        </div>
+        <div class="content-wrapper">
+                <div class="main-logo-wrapper">
+                <img src="images/WALKC.png" alt="WalkUScan Logo" class="hero-logo-img">
+                <h1 class="visually-hidden">WalkUScan</h1>
+            </div>
 
-        <p>A Comprehensive Index for Enhancing Pedestrian-Friendly Environments in Latin American Cities</p>
-        
-        <div class="hero-logos">
-            <img src="images/UFRGS.png" alt="Partner 1">
-            <img src="images/LOG_UN_INTERNACIONAL_2024_EDITABLE_rojo.png" alt="Partner 2">
-            <img src="images/Chile_UniversidaddeConcepcion_UDEC_15_.png" alt="Partner 3">
-            <img src="images/ucl2.png" alt="Partner 4">
-            <img src="images/vref-logo.png" alt="Partner 5">
+            <p>A Comprehensive Index for Enhancing Pedestrian-Friendly Environments in Latin American Cities</p>
+            
+            <div class="hero-logos">
+                <img src="images/UFRGS.png" alt="Partner 1">
+                <img src="images/LOG_UN_INTERNACIONAL_2024_EDITABLE_rojo.png" alt="Partner 2">
+                <img src="images/Chile_UniversidaddeConcepcion_UDEC_15_.png" alt="Partner 3">
+                <img src="images/ucl2.png" alt="Partner 4">
+                <img src="images/vref-logo.png" alt="Partner 5">
+            </div>
         </div>
     </div>
 </section>
         <section class="page intro-page" data-index="1" id="challenge-page">
             <div class="hero-box">
-                <h1>The Challenge: Walking is a Necessity, Not a Choice</h1>
+                <div class="content-wrapper">
+                    <h1>The Challenge: Walking is a Necessity, Not a Choice</h1>
 
-                <div class="intro-content">
-                    <div class="intro-text">
-                        <p>For millions of people in Latin American cities, walking isn't just a healthy habit. It is the only way to get to work, school, or the doctor. Unfortunately, those who rely on walking the most often live in neighborhoods with the worst conditions.</p>
-                        <p>Historically, pedestrian needs have not always been included in public policies with the importance they deserve, leaving many to face "invisible barriers" every day: broken sidewalks, lack of lighting, and a constant feeling of being unsafe. We know that the decision to walk isn't just about distance; it’s about how we <strong>experience</strong> the street. If a path feels dangerous or uncomfortable, it limits a person's access to the city’s opportunities, reinforcing social inequality.</p>
-                    </div>
+                    <div class="intro-content">
+                        <div class="intro-text">
+                            <p>For millions of people in Latin American cities, walking isn't just a healthy habit. It is the only way to get to work, school, or the doctor. Unfortunately, those who rely on walking the most often live in neighborhoods with the worst conditions.</p>
+                            <p>Historically, pedestrian needs have not always been included in public policies with the importance they deserve, leaving many to face "invisible barriers" every day: broken sidewalks, lack of lighting, and a constant feeling of being unsafe. We know that the decision to walk isn't just about distance; it’s about how we <strong>experience</strong> the street. If a path feels dangerous or uncomfortable, it limits a person's access to the city’s opportunities, reinforcing social inequality.</p>
+                        </div>
 
-                    <div class="intro-image">
-                        <img src="images/foto1.png" alt="Sample Image">
+                        <div class="intro-image">
+                            <img src="images/foto1.png" alt="Sample Image">
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
         <section class="page intro-page" data-index="2" id="solution-page">
             <div class="hero-box">
-                <h1>Our Solution: Putting People at the Heart of Urban Design </h1>
+                <div class="content-wrapper">
+                    <h1>Our Solution: Putting People at the Heart of Urban Design </h1>
 
-                <div class="intro-content">
-                    <div class="intro-video">
-                        <video autoplay loop muted playsinline>
-                            <source src="images/C9 POA_2.mp4" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
+                    <div class="intro-content">
+                        <div class="intro-video">
+                            <video autoplay loop muted playsinline>
+                                <source src="images/C9 POA_2.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+
+                        <div class="intro-text">
+                            <p>To build better cities, we can’t just look at maps; we have to listen to the people walking them. Our project fills this gap by creating "people-centered" tools that combine hard urban data with real human stories. </p>
+                            <p>By using innovative technologies, like virtual reality and digital street audits, we capture how sidewalk quality and personal safety perceptions actually affect movement. Our goal is to provide city planners with evidence-based tools to transform our streets. We are working to ensure that walking becomes a safe, dignified, and inclusive right for everyone, regardless of which part of the city they call home. </p>
+                            
+                            
+                        </div>
                     </div>
 
-                    <div class="intro-text">
-                        <p>To build better cities, we can’t just look at maps; we have to listen to the people walking them. Our project fills this gap by creating "people-centered" tools that combine hard urban data with real human stories. </p>
-                        <p>By using innovative technologies, like virtual reality and digital street audits, we capture how sidewalk quality and personal safety perceptions actually affect movement. Our goal is to provide city planners with evidence-based tools to transform our streets. We are working to ensure that walking becomes a safe, dignified, and inclusive right for everyone, regardless of which part of the city they call home. </p>
-                        
-                        
-                    </div>
+                    <button id="learn-more-btn" data-open="false">Want to know more about this project?</button>
                 </div>
-
-                <button id="learn-more-btn" data-open="false">Want to know more about this project?</button>
             </div>
         </section>
         <section class="page objectives-page hidden-page" data-index="3" id="objectives-page">
             <div class="hero-box">
-                <h1>Objectives</h1>
-                
-                <div class="objectives-content">
-                    <div class="aim-section">
-                        <p>The primary aim of this project is to develop an assessment framework for walkability, encompassing both the mesoscale and microscale characteristics of the built environment, while considering individual perceptions through static experiments (traditional survey using text and images) and virtual reality experiences. To achieve this goal, we have established the following specific objectives:</p>
-                    </div>
+                <div class="content-wrapper">
+                    <h1>Objectives</h1>
+                    
+                    <div class="objectives-content">
+                        <div class="aim-section">
+                            <p>The primary aim of this project is to develop an assessment framework for walkability, encompassing both the mesoscale and microscale characteristics of the built environment, while considering individual perceptions through static experiments (traditional survey using text and images) and virtual reality experiences. To achieve this goal, we have established the following specific objectives:</p>
+                        </div>
 
-                    <div class="specific-objectives">
-                        <ol type="i">
-                            <li>Construct a walkability index that considers individual perceptions, using data from both the mesoscale and microscale characteristics of the built environment obtained from available sources, along with virtual audits using Google Street View. This index will be constructed for three Latin American cities located in different countries: Porto Alegre (Brazil), Barranquilla (Colombia) and Concepción (Chile).</li>
-                            <li>Map walkability in selected areas within these cities. The selection of these areas will be based on stratification variables, including motorization rate (MR - number of cars per household) or household income, average street slope, and the density of commercial establishments and services. Previous research suggests that these characteristics significantly impact walkability.</li>
-                            <li>Analyze whether there are differences in perceptions of urban features among different groups (socioeconomic status, gender, age) within cities and between the cities where the study is conducted, and how these differences affect the assessment of walkability.</li>
-                            <li>Compare the impact of perceptions of urban features when individuals participate in standardized virtual reality experiments conducted in all the studied cities. This will include an analysis of perception variations among groups and cities to determine whether these differences remain consistent or vary.</li>
-                        </ol>
+                        <div class="specific-objectives">
+                            <ol type="i">
+                                <li>Construct a walkability index that considers individual perceptions, using data from both the mesoscale and microscale characteristics of the built environment obtained from available sources, along with virtual audits using Google Street View. This index will be constructed for three Latin American cities located in different countries: Porto Alegre (Brazil), Barranquilla (Colombia) and Concepción (Chile).</li>
+                                <li>Map walkability in selected areas within these cities. The selection of these areas will be based on stratification variables, including motorization rate (MR - number of cars per household) or household income, average street slope, and the density of commercial establishments and services. Previous research suggests that these characteristics significantly impact walkability.</li>
+                                <li>Analyze whether there are differences in perceptions of urban features among different groups (socioeconomic status, gender, age) within cities and between the cities where the study is conducted, and how these differences affect the assessment of walkability.</li>
+                                <li>Compare the impact of perceptions of urban features when individuals participate in standardized virtual reality experiments conducted in all the studied cities. This will include an analysis of perception variations among groups and cities to determine whether these differences remain consistent or vary.</li>
+                            </ol>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
         <section class="page intro-page hidden-page" id="methodology-page" data-index="4">
             <div class="hero-box">
-                <h1>Methodology</h1>
-                
-                <div class="methodology-video-container">
-                    <video id="stop-video" loop muted playsinline>
-                        <source src="images/MethodVREF.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
+                <div class="content-wrapper">
+                    <h1>Methodology</h1>
+                    
+                    <div class="methodology-video-container">
+                        <video id="stop-video" loop muted playsinline>
+                            <source src="images/MethodVREF.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
                 </div>                
             </div>
         </section>
         <section class="page intro-page hidden-page" data-index="5">
-            <h1>Factors and Components</h1>
+            
             
             <div id="excel-viewer">
+
+                <h1>Factors and Components</h1>
+
                 <div class="excel-controls">
                     <label for="sheet-selector"><bar>Non-observable factor</bar></label>
                     <select id="sheet-selector"></select>
@@ -1541,82 +1649,91 @@
         </section>
         <section class="page intro-page" data-index="6" id="walkability-page">
             <div class="hero-box">
-                <h1>What makes a city walkable?</h1>
+                <div class="content-wrapper">
 
-                <div class="intro-content">
-                    <div class="intro-text">
-                        <p>Walkability is more than just having sidewalks; it is the measure of how safely, easily, and comfortably a person can navigate their city on foot. In the Latin American context, however, this is often a matter of <strong>social justice.</strong> While walking is the most common way to move, deep spatial inequalities mean that low-income neighborhoods often face the harshest conditions, with fragmented infrastructure and limited access to urban opportunities compared to wealthier areas. </p>
+                    <h1>What makes a city walkable?</h1>
+
+                    <div class="intro-content">
+                        <div class="intro-text">
+                            <p>Walkability is more than just having sidewalks; it is the measure of how safely, easily, and comfortably a person can navigate their city on foot. In the Latin American context, however, this is often a matter of <strong>social justice.</strong> While walking is the most common way to move, deep spatial inequalities mean that low-income neighborhoods often face the harshest conditions, with fragmented infrastructure and limited access to urban opportunities compared to wealthier areas. </p>
+                        </div>
                     </div>
-                </div>
 
-                <div class="image-mosaic">
-                    <img src="streetview/Untitled02.png" alt="Amostra 1">
-                    <img src="streetview/Untitled04.png" alt="Amostra 2">
-                    <img src="streetview/Untitled06.png" alt="Amostra 3">
-                    <img src="streetview/Untitled08.png" alt="Amostra 4">
-                    <img src="streetview/Untitled10.png" alt="Amostra 5">
-                    <img src="streetview/Untitled12.png" alt="Amostra 6">
+                    <div class="image-mosaic">
+                        <img src="streetview/Untitled02.png" alt="Amostra 1">
+                        <img src="streetview/Untitled04.png" alt="Amostra 2">
+                        <img src="streetview/Untitled06.png" alt="Amostra 3">
+                        <img src="streetview/Untitled08.png" alt="Amostra 4">
+                        <img src="streetview/Untitled10.png" alt="Amostra 5">
+                        <img src="streetview/Untitled12.png" alt="Amostra 6">
+                    </div>
                 </div>
             </div>
         </section>
         <section class="page intro-page" data-index="7" id="measure-page">
             <div class="hero-box">
-                <h1>How do we measure walkability? </h1>
+                <div class="content-wrapper">
+                    <h1>How do we measure walkability? </h1>
 
-                <div class="measure-section">
+                    <div class="measure-section">
 
-                    <div class="left-mosaic">
-                        <img src="images/C5.png" alt="Imagem 1">
-                        <img src="images/C6.png" alt="Imagem 2">
-                    </div>
+                        <div class="left-mosaic">
+                            <img src="images/C5.png" alt="Imagem 1">
+                            <img src="images/C6.png" alt="Imagem 2">
+                        </div>
 
-                    <div class="right-text">
-                        <p>Measuring how "walkable" a street goes far beyond counting sidewalks or crosswalks. To truly understand the pedestrian experience in Latin American cities, we look at two sides of the same coin: <strong>what we see</strong> and <strong>what we feel.</strong> </p>
-                        <p>On one hand, we analyze the physical environment: the quality of pavement, the presence of trees, and the width of the streets. On the other, we capture the "unseen" factors: a person’s sense of safety, their comfort, and their personal perceptions of the path. By combining these hard facts with real human feelings, we create a complete picture of the urban journey. </p>
-                        <p>To achieve this, we measure street-level features using <strong>virtual audits</strong> (via Google Street View) and <strong>public datasets</strong>, allowing us to analyze every street segment with high precision using georeferenced information. </p>
-                        <p class="see-more">
-                            See more: <a href="https://doi.org/10.1080/01441647.2019.1703842" target="_blank">https://doi.org/10.1080/01441647.2019.1703842</a>
-                        </p>
+                        <div class="right-text">
+                            <p>Measuring how "walkable" a street goes far beyond counting sidewalks or crosswalks. To truly understand the pedestrian experience in Latin American cities, we look at two sides of the same coin: <strong>what we see</strong> and <strong>what we feel.</strong> </p>
+                            <p>On one hand, we analyze the physical environment: the quality of pavement, the presence of trees, and the width of the streets. On the other, we capture the "unseen" factors: a person’s sense of safety, their comfort, and their personal perceptions of the path. By combining these hard facts with real human feelings, we create a complete picture of the urban journey. </p>
+                            <p>To achieve this, we measure street-level features using <strong>virtual audits</strong> (via Google Street View) and <strong>public datasets</strong>, allowing us to analyze every street segment with high precision using georeferenced information. </p>
+                            <p class="see-more">
+                                See more: <a href="https://doi.org/10.1080/01441647.2019.1703842" target="_blank">https://doi.org/10.1080/01441647.2019.1703842</a>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
         <section class="page intro-page" data-index="8" id="science-page">
             <div class="hero-box">
-                <h1>The Science Behind the Index: How is WalkUScan calculated? </h1>
+                <div class="content-wrapper">
+                    <h1>The Science Behind the Index: How is WalkUScan calculated? </h1>
 
-                <div class="intro-content">
+                    <div class="intro-content">
 
-                    <div class="intro-image">
-                        <img src="images/mapacidades.png" alt="Sample Image">
-                    </div>
+                        <div class="intro-image">
+                            <img src="images/mapacidades.png" alt="Sample Image">
+                        </div>
 
-                    <div class="intro-text">
-                        <p>WalkUScan was built through <strong>perception surveys</strong> with residents of three distinct cities: <strong>Porto Alegre, Concepción, and Barranquilla.</strong> </p>
-                        <p>To understand what truly matters to locals, we asked participants to rank different street attributes and choose between simulated environments in Virtual Reality. </p>
-                        <p>With this data, we were able to assign a specific weight to each attribute, ensuring that the index reflects the actual priorities of those who live in these cities. </p>
+                        <div class="intro-text">
+                            <p>WalkUScan was built through <strong>perception surveys</strong> with residents of three distinct cities: <strong>Porto Alegre, Concepción, and Barranquilla.</strong> </p>
+                            <p>To understand what truly matters to locals, we asked participants to rank different street attributes and choose between simulated environments in Virtual Reality. </p>
+                            <p>With this data, we were able to assign a specific weight to each attribute, ensuring that the index reflects the actual priorities of those who live in these cities. </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
         <section class="page intro-page" data-index="9" id="othercity-page">
             <div class="hero-box">
-                <h1>Can this methodology be used in other cities?  </h1>
+                <div class="content-wrapper">
+                    <h1>Can this methodology be used in other cities?  </h1>
 
-                <div class="intro-content">
-                    <div class="intro-text">
-                        <p>Yes! We calculated the index for three different cities because we know that local reality shapes how people perceive their surroundings. If you want to assess walkability in your own city, you have two paths: </p>
-                        <ol class="toolkit-steps">
-                            <li>
-                                <strong>Use our Toolkit:</strong> You can choose the weights from the city that most closely resembles yours (Porto Alegre, Concepción, or Barranquilla) and simply input your local street-level data into our tool.
-                            </li>
-                            <li>
-                                <strong>Customize Your Index:</strong> We provide our perception survey as an open resource. You can apply it to your local community to calculate personalized weights, creating a walkability index that is 100% tailored to your city's unique cultural and urban context.
-                            </li>
-                        </ol>
-                        <a href="null" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
-                            <button id="download-btn">Download Toolkit</button>
-                        </a>
+                    <div class="intro-content">
+                        <div class="intro-text">
+                            <p>Yes! We calculated the index for three different cities because we know that local reality shapes how people perceive their surroundings. If you want to assess walkability in your own city, you have two paths: </p>
+                            <ol class="toolkit-steps">
+                                <li>
+                                    <strong>Use our Toolkit:</strong> You can choose the weights from the city that most closely resembles yours (Porto Alegre, Concepción, or Barranquilla) and simply input your local street-level data into our tool.
+                                </li>
+                                <li>
+                                    <strong>Customize Your Index:</strong> We provide our perception survey as an open resource. You can apply it to your local community to calculate personalized weights, creating a walkability index that is 100% tailored to your city's unique cultural and urban context.
+                                </li>
+                            </ol>
+                            <a href="null" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <button id="download-btn">Download Toolkit</button>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2007,6 +2124,49 @@
             });
         });
 
+        function autoScaleAllPages() {
+        // Seleciona todos os wrappers de conteúdo
+        const wrappers = document.querySelectorAll('.content-wrapper');
+
+        wrappers.forEach(wrapper => {
+            const container = wrapper.closest('.hero-box');
+            if (!container) return;
+
+            // 1. Resetar escala para medir o tamanho natural (original)
+            wrapper.style.transform = 'scale(1)';
+            
+            // 2. Dimensões da caixa branca (com margem de segurança de 40px)
+            const containerW = container.clientWidth - 40;
+            const containerH = container.clientHeight - 40;
+
+            // 3. Dimensões reais do conteúdo
+            const contentW = wrapper.offsetWidth;
+            const contentH = wrapper.offsetHeight;
+
+            // 4. Cálculo da proporção para largura e altura
+            const scaleX = containerW / contentW;
+            const scaleY = containerH / contentH;
+
+            // 5. Escolhe o menor para garantir que caiba em ambos os sentidos
+            let finalScale = Math.min(scaleX, scaleY);
+
+            // 6. Limita a escala (não deixa ficar maior que 100% em telas 4K)
+            if (finalScale > 1) finalScale = 1;
+
+            // 7. Aplica a escala final
+            wrapper.style.transform = `scale(${finalScale})`;
+        });
+
+        
+    }
+
+    // Inicia o observador de redimensionamento
+    window.addEventListener('resize', autoScaleAllPages);
+    window.addEventListener('load', autoScaleAllPages);
+
+    // DICA: Chame autoScaleAllPages() sempre que mudar de página 
+    // no seu script de navegação para garantir o alinhamento.
+
         // --- DICIONÁRIOS DE DADOS ---
         // (Seus objetos attributeMap, attributeDescriptions e invertedAttributes permanecem aqui, sem alterações)
         const attributeMap = { 'F0_WI': 'Walkability Index', 'F1_DELSIDE': 'Delimited Sidewalks', 'F2_SIDEWID': 'Sidewalk Width', 'F3_QUALITY': 'Quality of Pavement', 'F4_INFRA': 'Pedestrian Infrastructure(Vulnearable People)', 'F5_OBSTACL': 'Obstacles on Sidewalk/Vehicles Parked on Sidewalks', 'F6_VEHSPEE': 'Vehicle Speed', 'F7_TRAFFIC': 'Traffic Flow', 'F8_TRAFFIC_DEVICES': 'Presence of Traffic Control Devices/Crosswalks', 'F9_TRAFFIC': 'Crashes', 'F10_CROSST': 'Crossing Time', 'F11_CAMERA': 'Presence of Security Cameras/Officers/Police Stations', 'F12_PEDFLO': 'Pedestrian Flow', 'F13_CRIMES': 'Number of Crimes', 'F14_LIGHT': 'Quality of Lighting', 'F15_COMMER': 'Commercial', 'F16_INSTIT': 'Institutional Density', 'F17_RESIDE': 'Residential', 'F18_PUBLIC': 'Public Transport', 'F19_GREENA': 'Green Areas', 'F20_TREES': 'Presence of Trees', 'F21_AESTHE': 'Aesthetics of Buildings ', 'F22_CLEANL': 'Cleanliness', 'F23_AIRPOL': 'Air Pollution', 'F24_WATER': 'Stagnant Water', 'F25_NOISE': 'Noise', 'F26_SLOPE': 'Slope', 'F27_LENGTH': 'Block Lenght(Normalized)' };
@@ -2293,6 +2453,16 @@
             table.style.transform = `scale(${finalScale})`;
             table.style.width = (actualWidth > availableWidth) ? "auto" : "100%";
         }
+
+        const resizeObserver = new ResizeObserver(entries => {
+            // Quando qualquer hero-box mudar de tamanho ou aparecer, re-escala
+            autoScaleAllPages();
+        });
+
+        // Começa a observar todas as hero-boxes do site
+        document.querySelectorAll('.hero-box').forEach(box => {
+            resizeObserver.observe(box);
+        });
 
 
 
