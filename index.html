@@ -2125,40 +2125,50 @@
         });
 
         function autoScaleAllPages() {
-        // Seleciona todos os wrappers de conteúdo
-        const wrappers = document.querySelectorAll('.content-wrapper');
-
-        wrappers.forEach(wrapper => {
-            const container = wrapper.closest('.hero-box');
-            if (!container) return;
-
-            // 1. Resetar escala para medir o tamanho natural (original)
-            wrapper.style.transform = 'scale(1)';
+            const wrappers = document.querySelectorAll('.content-wrapper');
             
-            // 2. Dimensões da caixa branca (com margem de segurança de 40px)
-            const containerW = container.clientWidth - 40;
-            const containerH = container.clientHeight - 40;
+            // Detecta se a tela está em modo "Retrato" (Altura > Largura)
+            const isPortrait = window.innerHeight > window.innerWidth;
+            const isMobile = window.innerWidth < 768;
 
-            // 3. Dimensões reais do conteúdo
-            const contentW = wrapper.offsetWidth;
-            const contentH = wrapper.offsetHeight;
+            wrappers.forEach(wrapper => {
+                const container = wrapper.closest('.hero-box');
+                if (!container) return;
 
-            // 4. Cálculo da proporção para largura e altura
-            const scaleX = containerW / contentW;
-            const scaleY = containerH / contentH;
+                // Reset inicial para medição limpa
+                wrapper.style.transform = 'scale(1)';
 
-            // 5. Escolhe o menor para garantir que caiba em ambos os sentidos
-            let finalScale = Math.min(scaleX, scaleY);
+                if (isPortrait || isMobile) {
+                    // No Celular/Portrait: Não forçamos os 1300px
+                    // Deixamos o conteúdo fluir verticalmente (empilhado)
+                    wrapper.style.width = '100%';
+                    return; 
+                } else {
+                    // No Desktop: Mantemos a largura de projeto de 1300px
+                    wrapper.style.width = '1300px';
+                }
 
-            // 6. Limita a escala (não deixa ficar maior que 100% em telas 4K)
-            if (finalScale > 1) finalScale = 1;
+                // --- Lógica de Escala para Desktop/Landscape ---
+                const containerW = container.clientWidth - 40;
+                const containerH = container.clientHeight - 40;
+                const contentW = wrapper.offsetWidth;
+                const contentH = wrapper.offsetHeight;
 
-            // 7. Aplica a escala final
-            wrapper.style.transform = `scale(${finalScale})`;
-        });
+                const scaleX = containerW / contentW;
+                const scaleY = containerH / contentH;
+
+                // Escolhe o menor para garantir que caiba na caixa branca
+                let finalScale = Math.min(scaleX, scaleY);
+
+                // Não deixa o conteúdo ficar gigante em telas 4K
+                if (finalScale > 1.2) finalScale = 1.2;
+
+                wrapper.style.transform = `scale(${finalScale})`;
+            });
+        }
 
         
-    }
+
 
     // Inicia o observador de redimensionamento
     window.addEventListener('resize', autoScaleAllPages);
