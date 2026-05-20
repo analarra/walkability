@@ -236,7 +236,6 @@
             position: relative;
             padding-bottom: 25%; /* Mantém a proporção 16:9 se necessário */
             height: 0;
-            overflow: hidden;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
@@ -251,6 +250,28 @@
             height: 100%;
             border-radius: 12px;
             object-fit: cover; /* Faz o vídeo preencher o espaço sem distorcer */
+        }
+
+        /* Regra para o parágrafo da fonte aparecer perfeito */
+        .intro-video .video-source {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            
+            /* MUDANÇA SALVADORA: Posicionamento absoluto para sair de trás do vídeo */
+            position: absolute !important;
+            
+            /* Como o padding-bottom é 25%, o bottom do vídeo acaba exatamente aí. 
+            Jogamos o texto um pouco mais para baixo (ex: -25px) */
+            bottom: -25px !important; 
+            left: -10 !important;
+            
+            font-size: 0.8rem !important;
+            color: #666 !important;
+            font-style: italic !important;
+            text-align: center !important;
+            width: 100% !important;
+            margin: 0 !important; /* Reseta margem para não interferir no absoluto */
         }
 
 
@@ -788,13 +809,35 @@
         }
 
         .content-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 1300px;                /* Sua largura de referência para o design */
-            transform-origin: center center;
-            flex-shrink: 0;               /* Impede que o flexbox esmague o wrapper */
-            transition: transform 0.2s ease-out;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            width: 1300px !important; /* Forçado via CSS também */
+            transform-origin: center center !important;
+            flex-shrink: 0 !important;
+            transition: transform 0.15s ease-out;
+        }
+
+        /* Regra para o parágrafo da fonte aparecer perfeito */
+        .content-wrapper .video-source {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            
+            /* MUDANÇA SALVADORA: Posicionamento absoluto para sair de trás do vídeo */
+            position: absolute !important;
+            
+            /* Como o padding-bottom é 25%, o bottom do vídeo acaba exatamente aí. 
+            Jogamos o texto um pouco mais para baixo (ex: -25px) */
+            bottom: -25px !important; 
+            left: 55px !important;
+            
+            font-size: 0.8rem !important;
+            color: #666 !important;
+            font-style: italic !important;
+            text-align: center !important;
+            width: 100% !important;
+            margin: 0 !important; /* Reseta margem para não interferir no absoluto */
         }
 
         .hero-box h1 {
@@ -1048,26 +1091,62 @@
             gap: 40px;               /* Espaço entre o mosaico de fotos e o texto */
         }
 
-        /* Mosaico de fotos à esquerda */
+        /* 1. Força o container das imagens a alinhar tudo em coluna e ao centro */
         #measure-page .left-mosaic {
-            display: flex;
-            flex-direction: column; /* Empilha as duas imagens verticalmente */
-            flex: 0 0 400px;         /* Ocupa exatamente 400px de largura e não estica */
-            max-width: 400px;
-            gap: 0px;               /* Espaço entre as duas fotos */
-            overflow: hidden;
-            border-radius: 8px;      /* Opcional: arredonda os cantos do bloco de fotos */
+            position: relative !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;  /* Centraliza as imagens e o texto juntos */
+            justify-content: flex-start !important;
+            height: auto !important;
         }
 
-        /* Estilo para as duas imagens no mosaico */
+        /* Força as imagens do mosaico a manterem o design arredondado */
+        /* 1. Remove a margem embaixo das imagens para eliminar a faixa branca */
         #measure-page .left-mosaic img {
-            width: 100% !important;  /* Ocupa toda a largura do contêiner do mosaico */
-            height: 250px;           /* Defina uma altura fixa para as fotos ficarem iguais */
-            object-fit: cover;       /* Garante que a imagem preencha o quadrado sem distorcer */
-            display: block;          /* Remove espaços indesejados abaixo da imagem */
-            margin: 0;
-            padding: 0;
+            border-radius: 12px !important; /* Mantém arredondado por padrão */
+            width: 100% !important;
+            max-width: 450px !important;
+            height: auto !important;
+            margin-bottom: 0 !important; /* REMOVE O ESPAÇO: cola uma foto na outra */
         }
+
+        /* 2. Remove o arredondamento dos cantos internos que fazem fronteira */
+
+        /* Foto de Cima: Mantém topo arredondado, mas zera a base */
+        #measure-page .left-mosaic img:first-of-type {
+            border-bottom-left-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+        }
+
+        /* Foto de Baixo: Mantém a base arredondada, mas zera o topo */
+        #measure-page .left-mosaic img:last-of-type {
+            border-top-left-radius: 0 !important;
+            border-top-right-radius: 0 !important;
+        }
+
+        /* 2. Remove o posicionamento absoluto da legenda para ela se alinhar nativamente */
+        #measure-page .left-mosaic .video-source {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            
+            /* MUDANÇA CRUCIAL: Voltamos para o fluxo comum */
+            position: relative !important; 
+            bottom: auto !important;
+            left: auto !important;
+            
+            /* Espaçamento perfeito logo abaixo da segunda foto */
+            margin: 12px 0 0 0 !important; 
+            
+            font-size: 0.8rem !important;
+            color: #666 !important;
+            font-style: italic !important;
+            text-align: center !important;
+            width: 100% !important;
+        }
+
+        
 
         /* Texto à direita */
         #measure-page .right-text {
@@ -1083,6 +1162,7 @@
             }
             
             #measure-page .left-mosaic {
+                position: relative !important;
                 flex: 1 1 100%;       /* Ocupa toda a largura disponível */
                 max-width: 100%;
                 flex-direction: row;  /* Em telas médias, coloca as fotos lado a lado */
@@ -1125,11 +1205,13 @@
         }
 
         /* 1. Remove fundo, sombra e borda do CONTAINER da imagem */
+        /* Garante que o contêiner da imagem na página Science centralize tudo o que está dentro */
         #science-page .intro-image {
-            background: none !important;
-            box-shadow: none !important;
-            border: none !important;
-            padding: 0 !important; /* Remove qualquer respiro interno */
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;   /* Centraliza o mapa e a legenda no mesmo eixo */
+            justify-content: center !important;
+            width: auto !important;            /* Deixa a largura se ajustar à imagem */
         }
 
         /* 2. Remove sombra e cantos arredondados da IMAGEM em si */
@@ -1141,6 +1223,25 @@
             border: none !important;
             object-fit: contain;   /* Garante que o mapa não seja cortado */
         }
+
+        /* 2. Remove o posicionamento absoluto da legenda para ela se alinhar nativamente */
+        #science-page .intro-content .intro-image .video-source {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            bottom: auto !important;
+            left: auto !important;
+            
+            margin: 12px 0 0 0 !important; /* Espaçamento controlado entre o mapa e o texto */
+            
+            font-size: 0.8rem !important;
+            color: #666 !important;
+            font-style: italic !important;
+            text-align: center !important;
+            width: 100% !important;
+        }
+
 
         #science-page h1 {
             font-size: 3rem; /* Ajuste este valor (ex: 40px, 3rem, etc.) */
@@ -1580,17 +1681,18 @@
                             <video autoplay loop muted playsinline>
                                 <source src="images/C9 POA_2.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
+                                
                             </video>
+                            <p class="video-source">Source: Author's video (2025).</p>
                         </div>
 
                         <div class="intro-text">
                             <p>To build better cities, we can’t just look at maps; we have to listen to the people walking them. Our project fills this gap by creating "people-centered" tools that combine hard urban data with real human stories. </p>
                             <p>By using innovative technologies, like virtual reality and digital street audits, we capture how sidewalk quality and personal safety perceptions actually affect movement. Our goal is to provide city planners with evidence-based tools to transform our streets. We are working to ensure that walking becomes a safe, dignified, and inclusive right for everyone, regardless of which part of the city they call home. </p>
                             
-                            
                         </div>
+                        
                     </div>
-
                     <button id="learn-more-btn" data-open="false">Want to know more about this project?</button>
                 </div>
             </div>
@@ -1667,6 +1769,9 @@
                         <img src="streetview/Untitled10.png" alt="Amostra 5">
                         <img src="streetview/Untitled12.png" alt="Amostra 6">
                     </div>
+
+                    <p class="video-source">Source: Google Earth Pro (2026).</p>
+
                 </div>
             </div>
         </section>
@@ -1680,6 +1785,7 @@
                         <div class="left-mosaic">
                             <img src="images/C5.png" alt="Imagem 1">
                             <img src="images/C6.png" alt="Imagem 2">
+                            <p class="video-source">Source: Author's image (2025).</p>
                         </div>
 
                         <div class="right-text">
@@ -1703,6 +1809,7 @@
 
                         <div class="intro-image">
                             <img src="images/mapacidades.png" alt="Sample Image">
+                            <p class="video-source">Source: Author's image (2025).</p>
                         </div>
 
                         <div class="intro-text">
@@ -2126,53 +2233,48 @@
 
         function autoScaleAllPages() {
             const wrappers = document.querySelectorAll('.content-wrapper');
-            
-            // Detecta se a tela está em modo "Retrato" (Altura > Largura)
-            const isPortrait = window.innerHeight > window.innerWidth;
-            const isMobile = window.innerWidth < 768;
 
             wrappers.forEach(wrapper => {
                 const container = wrapper.closest('.hero-box');
                 if (!container) return;
 
-                // Reset inicial para medição limpa
-                wrapper.style.transform = 'scale(1)';
+                // 1. IMPORTANTE: Forçamos o wrapper a manter SEMPRE a largura de projeto
+                // Não importa se é celular ou monitor 4K, a base matemática é 1300px.
+                wrapper.style.width = '1300px';
+                wrapper.style.transform = 'scale(1)'; // Reseta para medir o tamanho real nativo
 
-                if (isPortrait || isMobile) {
-                    // No Celular/Portrait: Não forçamos os 1300px
-                    // Deixamos o conteúdo fluir verticalmente (empilhado)
-                    wrapper.style.width = '100%';
-                    return; 
-                } else {
-                    // No Desktop: Mantemos a largura de projeto de 1300px
-                    wrapper.style.width = '1300px';
-                }
+                // 2. Pegamos o espaço interno disponível na caixa branca (subtraindo paddings)
+                // Damos uma margem de segurança segura (60px) para não colar nas bordas
+                const containerW = container.clientWidth - 60;
+                const containerH = container.clientHeight - 60;
 
-                // --- Lógica de Escala para Desktop/Landscape ---
-                const containerW = container.clientWidth - 40;
-                const containerH = container.clientHeight - 40;
+                // 3. Pegamos o tamanho real que o conteúdo ocupa dentro dos 1300px
                 const contentW = wrapper.offsetWidth;
                 const contentH = wrapper.offsetHeight;
 
+                // 4. Calculamos o fator de encolhimento necessário para cada eixo
                 const scaleX = containerW / contentW;
                 const scaleY = containerH / contentH;
 
-                // Escolhe o menor para garantir que caiba na caixa branca
+                // 5. O PULO DO GATO: Usamos Math.min SEM EXCEÇÃO.
+                // Se a tela for estreita (celular), o scaleX vai ser pequeno e vai encolher tudo.
+                // Se a janela for baixa (print 1), o scaleY vai ser pequeno e vai encolher tudo impedindo o estouro.
                 let finalScale = Math.min(scaleX, scaleY);
 
-                // Não deixa o conteúdo ficar gigante em telas 4K
-                if (finalScale > 1.2) finalScale = 1.2;
+                // 6. Segurança: Não deixa o conteúdo ficar gigante se a caixa branca for imensa
+                if (finalScale > 1) finalScale = 1;
 
+                // 7. Aplica a escala matemática perfeita centralizada
                 wrapper.style.transform = `scale(${finalScale})`;
             });
         }
 
-        
-
-
-    // Inicia o observador de redimensionamento
-    window.addEventListener('resize', autoScaleAllPages);
-    window.addEventListener('load', autoScaleAllPages);
+        // Garante a execução em todos os momentos cruciais de renderização
+        window.addEventListener('resize', autoScaleAllPages);
+        window.addEventListener('load', autoScaleAllPages);
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(autoScaleAllPages, 150); // Delay pro Leaflet e fontes carregarem
+        });
 
     // DICA: Chame autoScaleAllPages() sempre que mudar de página 
     // no seu script de navegação para garantir o alinhamento.
