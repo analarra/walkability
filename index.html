@@ -503,7 +503,7 @@
             margin: 0 !important;
         }
 
-        #learn-more-btn {
+        #learn-more-btn, #related-btn {
             transition: all 0.3s ease;
             margin-top: 25px;
             padding: 12px 24px;
@@ -518,7 +518,7 @@
         }
 
         /* Efeito sutil ao passar o mouse */
-        #learn-more-btn:hover {
+        #learn-more-btn:hover, #related-btn:hover {
             filter: brightness(1.1);
             transform: translateY(-2px);
         }
@@ -1379,6 +1379,30 @@
             background-color: #0f610c; /* Cor inicial verde */
         }
 
+        /* Estilo padrão do botão para manter a identidade visual */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 24px;
+            padding: 12px 24px;
+            background-color: #2b3a4a; /* Ajuste para a cor principal do seu tema se for diferente */
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d2733;
+            transform: translateY(-2px);
+        }
+
         /* Estilo para o novo botão de voltar (pode ser igual ao anterior) */
         #show-less-btn {
             margin-top: 20px;
@@ -1817,7 +1841,14 @@
                             <p>To understand what truly matters to locals, we asked participants to rank different street attributes and choose between simulated environments in Virtual Reality. </p>
                             <p>With this data, we were able to assign a specific weight to each attribute, ensuring that the index reflects the actual priorities of those who live in these cities. </p>
                         </div>
+
+
                     </div>
+
+                    <a href="../relatedwork" target="_blank" style="text-decoration: none;">
+                        <button id="related-btn">See related work</button>
+                    </a>
+
                 </div>
             </div>
         </section>

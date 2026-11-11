@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WalkUScan - Related Work</title>
+    <style>
+        /* --- ESTILOS BASE E RESETS --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            /* Fundo com a mesma imagem do projeto principal */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                              url('../images/background.png'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Mantém o fundo fixo ao rolar */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+        }
+
+        /* --- CAIXA BRANCA CENTRALIZADA (COM SCROLL NORMAL) --- */
+        .hero-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 900px; /* Largura confortável para leitura de artigos */
+            padding: 40px 50px;
+            margin: 20px auto;
+        }
+
+        /* --- CABEÇALHO --- */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .header-section h1 {
+            color: #222;
+            font-size: 2.2rem;
+            line-height: 1.2;
+        }
+
+        /* Botão sutil para voltar ao site principal */
+        .back-btn {
+            text-decoration: none;
+            color: #555;
+            font-size: 14px;
+            font-weight: bold;
+            background: #f0f0f0;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: #e0e0e0;
+            color: #000;
+        }
+
+        /* --- CONTEÚDO E TEXTOS --- */
+        .intro-text p {
+            color: #444;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* --- LISTA DE TRABALHOS E PUBLICAÇÕES --- */
+        .publications-list {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .publication-card {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 10px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .publication-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .pub-info h3 {
+            color: #222;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .pub-info p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .pub-meta {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        /* --- BOTÃO DE DOWNLOAD VERDE (PADRÃO DO PROJETO) --- */
+        .download-pdf-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: #0f610c; /* Verde padrão WalkUScan */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .download-pdf-btn:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+        }
+
+        /* --- RESPONSIVIDADE PARA CELULARES --- */
+        @media (max-width: 600px) {
+            body {
+                padding: 15px 10px;
+            }
+            .hero-box {
+                padding: 25px 20px;
+            }
+            .header-section {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .publication-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .download-pdf-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-box">
+        <!-- Cabeçalho da página -->
+        <div class="header-section">
+            <h1>Related Work & Publications</h1>
+            <a href="../index.html#science-page" class="back-btn">&larr; Back to Home</a>
+        </div>
+
+        <!-- Descrição geral -->
+        <div class="intro-text">
+            <p>Explore the research, articles, and technical reports developed within the scope of the WalkUScan project and its partner institutions.</p>
+        </div>
+
+        <!-- Lista de Trabalhos / Artigos -->
+        <div class="publications-list">
+
+            <!-- Item 1 -->
+            <div class="publication-card">
+                <div class="pub-info">
+                    <h3>EXISTE ASSIMETRIA NA PERCEPÇÃO DA CAMINHABILIDADE? UM ESTUDO A PARTIR DE VÍDEOS 2D E REALIDADE VIRTUAL IMERSIVA</h3>
+                    <p></p>
+                    <div class="pub-meta">Published in Proceedings of the 39th Congress on Transport Teaching and Research (39º ANPET), 2026. Goiânia, Goiás, Brasil.</div>
+                </div>
+                <!-- Altere o href para o caminho real do seu arquivo PDF -->
+                <a href="../PDF/Artigo_ANPET_VREF_Finalcorrigido_com_nomes - AJUSTE LEGENDA.pdf" download class="download-pdf-btn">
+                    Download PDF
+                </a>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="publication-card">
+                <div class="pub-info">
+                    <h3>EXPLORING ASYMMETRY IN WALKABILITY PERCEPTION: EVIDENCE FROM 2D VIDEO EXPERIMENTS IN LATIN AMERICAN CITIES</h3>
+                    <p></p>
+                    <div class="pub-meta">Published in XXIII Pan-American Congress in Transportation and Logistics Research, 2026. San Diego, California, United States of America.
+                    Article submited to npj Sustainable Mobility and Transport under review (November 2026)
+                    </div>
+                </div>
+                <a href="../PDF/GF_Artigo_PANAM_VREF_0312.pdf" download class="download-pdf-btn">
+                    Download PDF
+                </a>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="publication-card">
+                <div class="pub-info">
+                    <h3>FORMATOS DE ELICITAÇÃO E IMPORTÂNCIA RELATIVA DAS DIMENSÕES DA CAMINHABILIDADE</h3>
+                    <p></p>
+                    <div class="pub-meta">Published in Proceedings of the 40th Congress on Transport Teaching and Research (40º ANPET), 2026. Búzios, Rio de Janeiro, Brasil.</div>
+                </div>
+                <a href="../PDF/Artigo_ANPET_2026_VREF_v2 corrigido.pdf" download class="download-pdf-btn">
+                    Download PDF
+                </a>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="publication-card">
+                <div class="pub-info">
+                    <h3>WALKABILITY INEQUALITIES ACROSS AND WITHIN LATIN AMERICAN CITIES: A SEGMENT-LEVEL PERCEPTION-BASED FRAMEWORK</h3>
+                    <p class="abstract-text" style="display: none;">
+                        This study proposes a comprehensive and adaptable framework for assessing walkability in Latin American cities, with a focus on capturing local perceptions and built environment features. We developed the WalkUScan index by identifying key walkability components through perception surveys and modelling techniques in Porto Alegre (Brazil), Barranquilla (Colombia), and Concepción (Chile). The index was then applied using built environment data collected through virtual audits, public sources, and secondary data, enabling segment-level mapping of walkability conditions. These include perceived security, such as the presence of security cameras or personnel, adequate street lighting, and high pedestrian activity (more people walking); sidewalk quality, including the absence of cracks or surface damage, infrastructure that accommodates people with disabilities (e.g., ramps or tactile paving), and clearly delimited pedestrian paths; and traffic safety, such as the presence of traffic control devices or marked crosswalks, and low vehicle speed in pedestrian areas. Econometric analyses revealed inter- and intra-urban disparities in walkability. A pooled ranking logit model with city-specific scale parameters showed that cross-city differences reflect both response-scale effects and substantive variation in pedestrian priorities, supporting the need for locally calibrated walkability indices. Spatial analyses of walkability indices allow for the identification of local priorities, supporting the design of targeted, context-sensitive interventions. To support implementation, we developed an interactive web platform and a practical toolkit that offer a replicable methodology for other urban contexts and contribute to the development of more inclusive and responsive walkability assessment tools in Latin America.
+                    </p>
+                    <div class="pub-meta">Article submited to Journal of Transport Geography under review (November 2026)</div>
+                </div>
+                <button class="download-pdf-btn" onclick="toggleAbstract(this)">
+                    SEE ABSTRACT
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Adiciona a função JavaScript para o Abstract funcionar -->
+    <script>
+        function toggleAbstract(button) {
+            // Encontra o parágrafo <p> dentro da mesma publicação
+            const pubInfo = button.closest('.publication-card').querySelector('.pub-info p');
+            
+            // Alterna a visibilidade e o texto do botão
+            if (pubInfo.style.display === 'none' || pubInfo.style.display === '') {
+                pubInfo.style.display = 'block';
+                button.textContent = 'HIDE ABSTRACT';
+            } else {
+                pubInfo.style.display = 'none';
+                button.textContent = 'SEE ABSTRACT';
+            }
+        }
+    </script>
+
+</body>
+</html>
