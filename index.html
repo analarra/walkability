@@ -1623,105 +1623,6 @@
             justify-content: center;
             gap: 5px;
         }
-
-        /* --- DROPDOWN CUSTOMIZADO COM HOVER EXPANSÍVEL --- */
-        .custom-dropdown {
-            position: relative;
-            min-width: 260px;
-        }
-
-        #dropdown-selected-btn {
-            width: 100%;
-            padding: 6px 10px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            background: white;
-            text-align: left;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
-            color: #333;
-        }
-
-        #dropdown-selected-btn.bold-text {
-            font-weight: bold;
-        }
-
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            min-width: 100%;
-            width: max-content;
-            max-width: 380px;
-            max-height: 70vh;
-            overflow-y: auto;
-            background: white;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 2000;
-            margin-top: 4px;
-        }
-
-        .dropdown-menu.open {
-            display: block;
-        }
-
-        /* Cada grupo começa com o atributo em negrito e seus filhos escondidos */
-        .attr-group {
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .attr-group:last-child {
-            border-bottom: none;
-        }
-
-        .attr-parent {
-            padding: 8px 12px;
-            font-weight: bold;
-            font-size: 13px;
-            cursor: pointer;
-            color: #222;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.15s;
-        }
-
-        .attr-parent:hover {
-            background-color: #f0f4f8;
-        }
-
-        /* Container dos subatributos (escondido por padrão) */
-        .attr-children {
-            display: none;
-            background-color: #fafafa;
-            border-top: 1px solid #eee;
-        }
-
-        /* Mágica do Hover: ao passar o mouse no grupo, abre apenas os filhos daquele grupo */
-        .attr-group:hover .attr-children,
-        .attr-group.expanded .attr-children {
-            display: block;
-        }
-
-        .attr-child {
-            padding: 7px 12px 7px 24px;
-            font-size: 12.5px;
-            font-weight: normal;
-            cursor: pointer;
-            color: #444;
-            transition: background 0.15s;
-        }
-
-        .attr-child:hover {
-            background-color: #e6eef8;
-            color: #000;
-        }
     </style>
 </head>
 <body>
@@ -1992,16 +1893,13 @@
                 </div>
 
                 <div class="control-group">
-                    <label>Attribute</label>
-                    <input type="hidden" id="attribute-select" value="F0_WI">
+                    <label for="factor-select">Factor</label>
+                    <select id="factor-select"></select>
+                </div>
 
-                    <div id="custom-attribute-dropdown" class="custom-dropdown">
-                        <button type="button" id="dropdown-selected-btn" class="bold-text">
-                            <span>Walkability Index</span>
-                            <span class="arrow">▾</span>
-                        </button>
-                        <div id="dropdown-options-list" class="dropdown-menu"></div>
-                    </div>
+                <div class="control-group">
+                    <label for="attribute-select">Attribute</label>
+                    <select id="attribute-select"></select>
                 </div>
             </div>
 
@@ -2453,97 +2351,29 @@
                     cityData.Concepcion = { type: "FeatureCollection", features: data.features.filter(f => f.properties.CIDADE.trim() === 'eje_central_Concepcion') };
                     cityData.Barranquilla = { type: "FeatureCollection", features: data.features.filter(f => f.properties.CIDADE.trim() === 'Baranquilla') };
 
-                    function updateSelectWeight() {
-                        const selectedAttr = attributeSelector.value;
-                        if (quartileAttributes.includes(selectedAttr)) {
-                            attributeSelector.style.fontWeight = 'bold';
-                        } else {
-                            attributeSelector.style.fontWeight = 'normal';
-                        }
-                    }
-                    
-                    const attributesToShow = Object.keys(attributeMap);
-                    const dropdownBtn = document.getElementById('dropdown-selected-btn');
-                    const dropdownList = document.getElementById('dropdown-options-list');
+                    const factorSelector = document.getElementById('factor-select');
 
-                    // Abre e fecha o menu principal ao clicar na caixa
-                    dropdownBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        dropdownList.classList.toggle('open');
+                    // Estrutura agrupando cada Fator aos seus respectivos Atributos
+                    const factorStructure = {
+                        'F0_WI': [],
+                        'Sidewalk Conditions': ['F1_DELSIDE', 'F2_SIDEWID', 'F3_QUALITY', 'F4_INFRA', 'F5_OBSTACL'],
+                        'Safety': ['F6_VEHSPEE', 'F7_TRAFFIC', 'F8_TRAFFIC', 'F9_TRAFFIC', 'F10_CROSST'],
+                        'Security': ['F11_CAMERA', 'F12_PEDFLO', 'F13_CRIMES', 'F14_LIGHT'],
+                        'Destinations': ['F15_COMMER', 'F16_INSTIT', 'F17_RESIDE', 'F18_PUBLIC', 'F19_GREENA'],
+                        'Enjoyment': ['F20_TREES', 'F21_AESTHE', 'F22_CLEANL', 'F23_AIRPOL', 'F24_WATER', 'F25_NOISE', 'F26_SLOPE', 'F27_LENGTH']
+                    };
+
+                    // Popula a caixa de Fatores
+                    factorSelector.innerHTML = '';
+                    Object.keys(factorStructure).forEach(factorKey => {
+                        const opt = document.createElement('option');
+                        opt.value = factorKey;
+                        opt.textContent = attributeMap[factorKey] || factorKey;
+                        factorSelector.appendChild(opt);
                     });
 
-                    // Fecha o menu se clicar fora
-                    document.addEventListener('click', () => {
-                        dropdownList.classList.remove('open');
-                    });
-
-                    // Função que seleciona o atributo e dispara a atualização do mapa
-                    function selectCustomAttribute(propKey) {
-                        attributeSelector.value = propKey;
-                        const displayName = attributeMap[propKey] || propKey;
-                        const isMain = quartileAttributes.includes(propKey);
-
-                        dropdownBtn.querySelector('span').textContent = displayName;
-                        if (isMain) {
-                            dropdownBtn.classList.add('bold-text');
-                        } else {
-                            dropdownBtn.classList.remove('bold-text');
-                        }
-
-                        dropdownList.classList.remove('open');
-
-                        // Dispara o evento 'change' que o seu mapa já escuta
-                        attributeSelector.dispatchEvent(new Event('change'));
-                    }
-
-                    // Constrói os grupos: cada item em quartileAttributes inicia um bloco expansível
-                    let currentGroup = null;
-                    let currentChildrenContainer = null;
-
-                    attributesToShow.forEach(propKey => {
-                        const label = attributeMap[propKey] || propKey;
-
-                        if (quartileAttributes.includes(propKey)) {
-                            // Cria um novo grupo para o atributo em negrito
-                            currentGroup = document.createElement('div');
-                            currentGroup.className = 'attr-group';
-
-                            const parentDiv = document.createElement('div');
-                            parentDiv.className = 'attr-parent';
-                            parentDiv.textContent = label;
-                            parentDiv.onclick = () => selectCustomAttribute(propKey);
-
-                            currentChildrenContainer = document.createElement('div');
-                            currentChildrenContainer.className = 'attr-children';
-
-                            currentGroup.appendChild(parentDiv);
-                            currentGroup.appendChild(currentChildrenContainer);
-                            dropdownList.appendChild(currentGroup);
-                        } else if (currentChildrenContainer) {
-                            // Adiciona os subatributos dentro do grupo em negrito anterior
-                            const childDiv = document.createElement('div');
-                            childDiv.className = 'attr-child';
-                            childDiv.textContent = label;
-                            childDiv.onclick = () => selectCustomAttribute(propKey);
-
-                            currentChildrenContainer.appendChild(childDiv);
-                        }
-                    });
-
-                    // 1. Logo após o loop attributesToShow.forEach(...) que cria as options:
-                    updateSelectWeight();
-
-                    const infoBox = document.getElementById('info-box');
-                    infoBoxToggle.addEventListener('click', () => {
-                        infoBox.classList.toggle('collapsed');
-                        infoBoxToggle.innerHTML = infoBox.classList.contains('collapsed') ? '&laquo;' : '&raquo;';
-                    });
-
-                    citySelector.addEventListener('change', displayCity);
-                    // 2. Dentro do listener de mudança do atributo:
-                    attributeSelector.addEventListener('change', () => {
-                        updateSelectWeight(); // <-- Atualiza o negrito da caixa selecionada
-
+                    // Atualiza o mapa, legenda e caixa de informações
+                    function refreshMapAttribute() {
                         const selectedAttr = attributeSelector.value;
                         const selectedCity = citySelector.value;
 
@@ -2556,9 +2386,57 @@
                             updateLegend();
                             updateInfoBox();
                         }
+                    }
+
+                    // Popula a caixa de Atributos de acordo com o Fator escolhido
+                    function populateAttributesForFactor(factorKey) {
+                        attributeSelector.innerHTML = '';
+
+                        // Opção padrão ("General"): o valor é a própria chave do Fator
+                        const generalOpt = document.createElement('option');
+                        generalOpt.value = factorKey;
+                        generalOpt.textContent = 'General';
+                        attributeSelector.appendChild(generalOpt);
+
+                        // Subatributos daquele Fator
+                        const attrs = factorStructure[factorKey] || [];
+                        attrs.forEach(attrKey => {
+                            const opt = document.createElement('option');
+                            opt.value = attrKey;
+                            opt.textContent = attributeMap[attrKey] || attrKey;
+                            attributeSelector.appendChild(opt);
+                        });
+
+                        // Desabilita a caixa de atributos se o Fator for o Walkability Index (que não tem subatributos)
+                        attributeSelector.disabled = (attrs.length === 0);
+
+                        refreshMapAttribute();
+                    }
+
+                    const infoBox = document.getElementById('info-box');
+                    infoBoxToggle.addEventListener('click', () => {
+                        infoBox.classList.toggle('collapsed');
+                        infoBoxToggle.innerHTML = infoBox.classList.contains('collapsed') ? '&laquo;' : '&raquo;';
                     });
-                    
+
+                    citySelector.addEventListener('change', () => {
+                        displayCity();
+                        // Garante que, ao trocar de cidade, o mapa respeite o fator/atributo já selecionado
+                        if (attributeSelector.value !== 'F0_WI') {
+                            refreshMapAttribute();
+                        }
+                    });
+
+                    factorSelector.addEventListener('change', () => {
+                        populateAttributesForFactor(factorSelector.value);
+                    });
+
+                    attributeSelector.addEventListener('change', refreshMapAttribute);
+
+                    // Inicializa com o primeiro fator (Walkability Index -> General)
+                    populateAttributesForFactor(factorSelector.value);
                     displayCity();
+
                 })
                 .catch(error => console.error("Erro ao carregar o GeoJSON das ruas:", error));
 
