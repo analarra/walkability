@@ -1623,6 +1623,105 @@
             justify-content: center;
             gap: 5px;
         }
+
+        /* --- DROPDOWN CUSTOMIZADO COM HOVER EXPANSÍVEL --- */
+        .custom-dropdown {
+            position: relative;
+            min-width: 260px;
+        }
+
+        #dropdown-selected-btn {
+            width: 100%;
+            padding: 6px 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            background: white;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #333;
+        }
+
+        #dropdown-selected-btn.bold-text {
+            font-weight: bold;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 100%;
+            width: max-content;
+            max-width: 380px;
+            max-height: 70vh;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 2000;
+            margin-top: 4px;
+        }
+
+        .dropdown-menu.open {
+            display: block;
+        }
+
+        /* Cada grupo começa com o atributo em negrito e seus filhos escondidos */
+        .attr-group {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .attr-group:last-child {
+            border-bottom: none;
+        }
+
+        .attr-parent {
+            padding: 8px 12px;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            color: #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.15s;
+        }
+
+        .attr-parent:hover {
+            background-color: #f0f4f8;
+        }
+
+        /* Container dos subatributos (escondido por padrão) */
+        .attr-children {
+            display: none;
+            background-color: #fafafa;
+            border-top: 1px solid #eee;
+        }
+
+        /* Mágica do Hover: ao passar o mouse no grupo, abre apenas os filhos daquele grupo */
+        .attr-group:hover .attr-children,
+        .attr-group.expanded .attr-children {
+            display: block;
+        }
+
+        .attr-child {
+            padding: 7px 12px 7px 24px;
+            font-size: 12.5px;
+            font-weight: normal;
+            cursor: pointer;
+            color: #444;
+            transition: background 0.15s;
+        }
+
+        .attr-child:hover {
+            background-color: #e6eef8;
+            color: #000;
+        }
     </style>
 </head>
 <body>
@@ -1891,9 +1990,18 @@
                         <option value="Barranquilla">Barranquilla</option>
                     </select>
                 </div>
+
                 <div class="control-group">
-                    <label for="attribute-select">Attribute</label>
-                    <select id="attribute-select"></select>
+                    <label>Attribute</label>
+                    <input type="hidden" id="attribute-select" value="F0_WI">
+
+                    <div id="custom-attribute-dropdown" class="custom-dropdown">
+                        <button type="button" id="dropdown-selected-btn" class="bold-text">
+                            <span>Walkability Index</span>
+                            <span class="arrow">▾</span>
+                        </button>
+                        <div id="dropdown-options-list" class="dropdown-menu"></div>
+                    </div>
                 </div>
             </div>
 
@@ -2355,20 +2463,71 @@
                     }
                     
                     const attributesToShow = Object.keys(attributeMap);
-                    attributesToShow.forEach(propKey => {
-                        const option = document.createElement('option');
-                        option.value = propKey;
-                        option.textContent = attributeMap[propKey] || propKey;
-                        // Deixa em negrito no menu dropdown
-                        // Deixa em negrito o Walkability Index E todos os novos fatores principais
-                        if (quartileAttributes.includes(propKey)) {
-                            option.style.fontWeight = 'bold';
+                    const dropdownBtn = document.getElementById('dropdown-selected-btn');
+                    const dropdownList = document.getElementById('dropdown-options-list');
+
+                    // Abre e fecha o menu principal ao clicar na caixa
+                    dropdownBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        dropdownList.classList.toggle('open');
+                    });
+
+                    // Fecha o menu se clicar fora
+                    document.addEventListener('click', () => {
+                        dropdownList.classList.remove('open');
+                    });
+
+                    // Função que seleciona o atributo e dispara a atualização do mapa
+                    function selectCustomAttribute(propKey) {
+                        attributeSelector.value = propKey;
+                        const displayName = attributeMap[propKey] || propKey;
+                        const isMain = quartileAttributes.includes(propKey);
+
+                        dropdownBtn.querySelector('span').textContent = displayName;
+                        if (isMain) {
+                            dropdownBtn.classList.add('bold-text');
                         } else {
-                            // Impede que as sub-opções herdem o negrito do <select> quando ele estiver ativo
-                            option.style.fontWeight = 'normal';
+                            dropdownBtn.classList.remove('bold-text');
                         }
 
-                        attributeSelector.appendChild(option);
+                        dropdownList.classList.remove('open');
+
+                        // Dispara o evento 'change' que o seu mapa já escuta
+                        attributeSelector.dispatchEvent(new Event('change'));
+                    }
+
+                    // Constrói os grupos: cada item em quartileAttributes inicia um bloco expansível
+                    let currentGroup = null;
+                    let currentChildrenContainer = null;
+
+                    attributesToShow.forEach(propKey => {
+                        const label = attributeMap[propKey] || propKey;
+
+                        if (quartileAttributes.includes(propKey)) {
+                            // Cria um novo grupo para o atributo em negrito
+                            currentGroup = document.createElement('div');
+                            currentGroup.className = 'attr-group';
+
+                            const parentDiv = document.createElement('div');
+                            parentDiv.className = 'attr-parent';
+                            parentDiv.textContent = label;
+                            parentDiv.onclick = () => selectCustomAttribute(propKey);
+
+                            currentChildrenContainer = document.createElement('div');
+                            currentChildrenContainer.className = 'attr-children';
+
+                            currentGroup.appendChild(parentDiv);
+                            currentGroup.appendChild(currentChildrenContainer);
+                            dropdownList.appendChild(currentGroup);
+                        } else if (currentChildrenContainer) {
+                            // Adiciona os subatributos dentro do grupo em negrito anterior
+                            const childDiv = document.createElement('div');
+                            childDiv.className = 'attr-child';
+                            childDiv.textContent = label;
+                            childDiv.onclick = () => selectCustomAttribute(propKey);
+
+                            currentChildrenContainer.appendChild(childDiv);
+                        }
                     });
 
                     // 1. Logo após o loop attributesToShow.forEach(...) que cria as options:
